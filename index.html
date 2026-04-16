@@ -1,0 +1,731 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --pt-bg: oklch(97.5% 0.007 80);
+  --pt-surface: oklch(100% 0 0);
+  --pt-surface-hover: oklch(98.5% 0.006 80);
+  --pt-text: oklch(18% 0.025 80);
+  --pt-text-muted: oklch(48% 0.016 80);
+  --pt-text-faint: oklch(65% 0.01 80);
+  --pt-border: oklch(88% 0.012 80);
+  --pt-border-light: oklch(93% 0.008 80);
+
+  --pt-kept: oklch(38% 0.13 145);
+  --pt-kept-bg: oklch(94.5% 0.05 145);
+  --pt-kept-bar: oklch(56% 0.14 145);
+
+  --pt-partial: oklch(54% 0.17 68);
+  --pt-partial-bg: oklch(95% 0.06 68);
+
+  --pt-broken: oklch(43% 0.19 22);
+  --pt-broken-bg: oklch(95.5% 0.055 22);
+
+  --pt-pending: oklch(44% 0.015 80);
+  --pt-pending-bg: oklch(93% 0.006 80);
+
+  --pt-link: oklch(44% 0.13 255);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.pt-wrap {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--pt-bg);
+  color: var(--pt-text);
+  padding: 2.5rem clamp(1rem, 5vw, 3rem) 5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ── */
+.pt-hero {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--pt-border);
+}
+
+.pt-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pt-text-faint);
+  margin-bottom: 0.6rem;
+}
+
+.pt-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 4.5vw, 42px);
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--pt-text);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.02em;
+}
+
+.pt-subline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--pt-text-muted);
+}
+
+.pt-subline-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--pt-text-faint);
+  flex-shrink: 0;
+}
+
+/* ── Stats ── */
+.pt-stats {
+  display: flex;
+  border: 1px solid var(--pt-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+  background: var(--pt-surface);
+}
+
+.pt-stat {
+  flex: 1;
+  padding: 18px 20px;
+  border-right: 1px solid var(--pt-border);
+}
+
+.pt-stat:last-child { border-right: none; }
+
+.pt-stat-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.pt-stat-value.total { color: var(--pt-text); }
+.pt-stat-value.kept { color: var(--pt-kept); }
+.pt-stat-value.partial { color: var(--pt-partial); }
+.pt-stat-value.broken { color: var(--pt-broken); }
+
+.pt-stat-label {
+  font-size: 11.5px;
+  color: var(--pt-text-faint);
+  font-weight: 500;
+}
+
+/* ── Progress ── */
+.pt-progress-section { margin-bottom: 2.5rem; }
+
+.pt-progress-bar {
+  height: 7px;
+  border-radius: 99px;
+  overflow: hidden;
+  display: flex;
+  background: var(--pt-border-light);
+  margin-bottom: 10px;
+}
+
+.pt-bar-kept    { background: var(--pt-kept-bar); height: 100%; transition: width 0.55s cubic-bezier(0.16,1,0.3,1); }
+.pt-bar-partial { background: var(--pt-partial);   height: 100%; transition: width 0.55s 0.08s cubic-bezier(0.16,1,0.3,1); }
+.pt-bar-broken  { background: var(--pt-broken);    height: 100%; transition: width 0.55s 0.16s cubic-bezier(0.16,1,0.3,1); }
+.pt-bar-pending { background: var(--pt-border);    height: 100%; transition: width 0.55s 0.24s cubic-bezier(0.16,1,0.3,1); }
+
+.pt-legend {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.pt-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--pt-text-faint);
+}
+
+.pt-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.pt-legend-dot.kept    { background: var(--pt-kept-bar); }
+.pt-legend-dot.partial { background: var(--pt-partial); }
+.pt-legend-dot.broken  { background: var(--pt-broken); }
+.pt-legend-dot.pending { background: var(--pt-border); }
+
+/* ── Controls ── */
+.pt-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.pt-search {
+  flex: 1;
+  min-width: 160px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 13.5px;
+  padding: 8px 13px;
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+  background: var(--pt-surface);
+  color: var(--pt-text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.pt-search::placeholder { color: var(--pt-text-faint); }
+
+.pt-search:focus {
+  border-color: oklch(62% 0.12 255);
+  box-shadow: 0 0 0 3px oklch(62% 0.12 255 / 12%);
+}
+
+.pt-filter-group { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.pt-filter-btn {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1px solid var(--pt-border);
+  background: var(--pt-surface);
+  color: var(--pt-text-muted);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  white-space: nowrap;
+}
+
+.pt-filter-btn:hover {
+  border-color: var(--pt-text-faint);
+  color: var(--pt-text);
+}
+
+.pt-filter-btn.active {
+  background: var(--pt-text);
+  border-color: var(--pt-text);
+  color: var(--pt-bg);
+}
+
+.pt-cat-filter {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 13px;
+  padding: 7px 11px;
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+  background: var(--pt-surface);
+  color: var(--pt-text);
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── Promise list ── */
+.pt-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--pt-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pt-card {
+  background: var(--pt-surface);
+  border-bottom: 1px solid var(--pt-border-light);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.pt-card:last-child { border-bottom: none; }
+.pt-card:hover { background: var(--pt-surface-hover); }
+
+.pt-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 15px 20px;
+}
+
+.pt-card-meta { flex: 1; min-width: 0; }
+
+.pt-card-category {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-text-faint);
+  margin-bottom: 3px;
+}
+
+.pt-card-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--pt-text);
+  line-height: 1.45;
+}
+
+.pt-card-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+/* ── Badge ── */
+.pt-badge {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.pt-badge-kept    { background: var(--pt-kept-bg);    color: var(--pt-kept); }
+.pt-badge-partial { background: var(--pt-partial-bg); color: var(--pt-partial); }
+.pt-badge-broken  { background: var(--pt-broken-bg);  color: var(--pt-broken); }
+.pt-badge-pending { background: var(--pt-pending-bg); color: var(--pt-pending); }
+
+/* ── Chevron ── */
+.pt-chevron {
+  color: var(--pt-text-faint);
+  transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.pt-card.expanded .pt-chevron { transform: rotate(180deg); }
+
+/* ── Smooth expand via grid rows ── */
+.pt-card-detail-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s cubic-bezier(0.16,1,0.3,1);
+}
+
+.pt-card.expanded .pt-card-detail-wrap {
+  grid-template-rows: 1fr;
+}
+
+.pt-card-detail-inner { overflow: hidden; }
+
+.pt-card-detail {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--pt-border-light);
+}
+
+.pt-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 28px;
+  padding-top: 16px;
+}
+
+.pt-detail-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pt-text-faint);
+  margin-bottom: 6px;
+}
+
+.pt-detail-text {
+  font-size: 13px;
+  color: var(--pt-text-muted);
+  line-height: 1.7;
+}
+
+.pt-detail-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid var(--pt-border-light);
+  font-size: 12px;
+  color: var(--pt-text-faint);
+  flex-wrap: wrap;
+}
+
+.pt-source-link {
+  font-size: 12px;
+  color: var(--pt-link);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.pt-source-link:hover { text-decoration: underline; }
+
+/* ── Empty state ── */
+.pt-empty {
+  padding: 3.5rem 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--pt-text-muted);
+  background: var(--pt-surface);
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .pt-stats { flex-wrap: wrap; }
+  .pt-stat { min-width: 50%; border-bottom: 1px solid var(--pt-border); }
+  .pt-stat:nth-child(2n) { border-right: none; }
+  .pt-stat:nth-last-child(-n+2) { border-bottom: none; }
+  .pt-detail-grid { grid-template-columns: 1fr; }
+  .pt-card-header { padding: 13px 15px; }
+  .pt-card-detail { padding: 0 15px 16px; }
+}
+</style>
+
+<div class="pt-wrap">
+  <h2 class="sr-only">Tinubu Promise Tracker — a civic tool tracking Nigerian presidential campaign promises</h2>
+
+  <div class="pt-hero">
+    <div class="pt-eyebrow">Civic Accountability · Nigeria 2023–2027</div>
+    <h1 class="pt-headline">Tinubu Promise Tracker</h1>
+    <div class="pt-subline">
+      <span>Renewed Hope Agenda</span>
+      <span class="pt-subline-sep"></span>
+      <span>Updated April 2026</span>
+      <span class="pt-subline-sep"></span>
+      <span>2027 election countdown</span>
+    </div>
+  </div>
+
+  <div class="pt-stats" id="stats"></div>
+  <div class="pt-progress-section">
+    <div class="pt-progress-bar" id="progress-bar"></div>
+    <div class="pt-legend">
+      <div class="pt-legend-item"><span class="pt-legend-dot kept"></span> Kept</div>
+      <div class="pt-legend-item"><span class="pt-legend-dot partial"></span> Partial / mixed</div>
+      <div class="pt-legend-item"><span class="pt-legend-dot broken"></span> Broken</div>
+      <div class="pt-legend-item"><span class="pt-legend-dot pending"></span> In progress</div>
+    </div>
+  </div>
+
+  <div class="pt-controls">
+    <input type="text" class="pt-search" id="search" placeholder="Search promises…" oninput="render()" />
+    <div class="pt-filter-group" id="status-filters"></div>
+    <select class="pt-cat-filter" id="cat-filter" onchange="render()">
+      <option value="all">All categories</option>
+    </select>
+  </div>
+
+  <div class="pt-list" id="list"></div>
+</div>
+
+<script>
+const STATUSES = [
+  { key: 'all',     label: 'All' },
+  { key: 'kept',    label: 'Kept' },
+  { key: 'partial', label: 'Partial' },
+  { key: 'broken',  label: 'Broken' },
+  { key: 'pending', label: 'In progress' },
+];
+
+const promises = [
+  {
+    id: 1,
+    title: 'Remove petrol subsidy and redirect savings to infrastructure',
+    category: 'Economy',
+    status: 'partial',
+    promise: 'Announced on inauguration day ("subsidy is gone"). Promised savings would be redirected to public infrastructure and welfare for the most vulnerable.',
+    assessment: 'Subsidy was removed immediately on May 29, 2023. Fuel prices surged from ₦187 to over ₦700/litre. The ₦8,000/month palliative cash transfer programme was announced but reached only a fraction of intended recipients. Infrastructure redirection remains largely unverified.',
+    source: 'https://www.bsg.ox.ac.uk/blog/midterm-assessment-evaluating-president-tinubus-first-two-years-office',
+    sourceLabel: 'Oxford Blavatnik School — midterm assessment',
+    updated: 'May 2025',
+  },
+  {
+    id: 2,
+    title: 'Unify the foreign exchange market',
+    category: 'Economy',
+    status: 'kept',
+    promise: 'End Nigeria\'s multiple exchange rate regime and unify the official and parallel market rates.',
+    assessment: 'The CBN unified exchange rates in June 2023. The naira was significantly devalued as a result — falling from ~₦460/$ to over ₦1,500/$ at one point — but the structural reform was implemented.',
+    source: 'https://www.bsg.ox.ac.uk/blog/midterm-assessment-evaluating-president-tinubus-first-two-years-office',
+    sourceLabel: 'Oxford Blavatnik School — midterm assessment',
+    updated: 'May 2025',
+  },
+  {
+    id: 3,
+    title: 'Reduce inflation to 15% by end of 2025',
+    category: 'Economy',
+    status: 'broken',
+    promise: 'Pledged during the 2024 budget presentation to bring inflation down to 15% by December 2025.',
+    assessment: 'Inflation remained around 18% at end of 2025 — down from a peak of ~34% but well above the 15% target. Food inflation eased due to harvest season, not structural change. Analysts note transport, housing, and power costs are still rising.',
+    source: 'https://punchng.com/tracking-tinubus-five-major-economic-pledges/',
+    sourceLabel: 'Punch — tracking five economic pledges',
+    updated: 'December 2025',
+  },
+  {
+    id: 4,
+    title: 'Create 50 million jobs',
+    category: 'Economy',
+    status: 'pending',
+    promise: 'Create 50 million jobs for the teeming youthful population through collaboration across ministries.',
+    assessment: 'No verifiable progress data published. The Ministry of Industry, Trade and Investment expressed confidence at inception. No independent tracking mechanism has been established.',
+    source: 'https://dailytrust.com/tinubu-unveils-8-point-agenda/',
+    sourceLabel: 'Daily Trust — 8-point agenda',
+    updated: 'August 2023',
+  },
+  {
+    id: 5,
+    title: 'Achieve 7% annual GDP growth by 2027',
+    category: 'Economy',
+    status: 'pending',
+    promise: 'Announced in August 2025 — target at least 7% annual economic growth by 2027 through bold reforms and infrastructure expansion.',
+    assessment: 'Current GDP growth rate is 4.23%. Target is ambitious. Tracking depends on quarterly GDP reports over the next two years.',
+    source: 'https://punchng.com/tracking-tinubus-five-major-economic-pledges/',
+    sourceLabel: 'Punch — tracking five economic pledges',
+    updated: 'October 2025',
+  },
+  {
+    id: 6,
+    title: 'Tackle insecurity — obliterate terror, kidnapping and banditry',
+    category: 'Security',
+    status: 'broken',
+    promise: 'Make it a fundamental responsibility to protect lives and property. Mobilise national security and military assets to obliterate terror, kidnapping, banditry and all other forms of violent extremism.',
+    assessment: 'Security budget increased 160% from ₦1.25trn (2023) to ₦3.25trn (2024). Despite this, 17,617 fatalities and 16,462 abductions were recorded from June 2023 to April 2025. Governors of Borno and Plateau states publicly stated government forces were "losing ground" to terrorists in April 2025.',
+    source: 'https://trt.global/afrika-english/article/04ebd1191144',
+    sourceLabel: 'TRT Afrika — midterm security review',
+    updated: 'May 2025',
+  },
+  {
+    id: 7,
+    title: 'Deliver affordable and sufficient electricity',
+    category: 'Energy',
+    status: 'broken',
+    promise: 'Generate, transmit and distribute sufficient, affordable electricity. Administration pledged if it fails to solve the power problem, it should not be re-elected.',
+    assessment: 'Electricity tariffs were increased in 2024. Power supply has not materially improved for most Nigerians. Aregbesola, a former ally, cited electricity failure as the clearest broken promise in April 2026.',
+    source: 'https://osundefender.com/tinubus-renewed-hope-agenda-a-scam-aregbesola/',
+    sourceLabel: 'Osun Defender — Aregbesola assessment',
+    updated: 'April 2026',
+  },
+  {
+    id: 8,
+    title: 'Make healthcare, education and housing accessible and affordable',
+    category: 'Social',
+    status: 'pending',
+    promise: 'Make basic healthcare, education, and housing accessible and affordable for all Nigerians.',
+    assessment: 'Some investments in education infrastructure and digital skills noted. Number of out-of-school children reportedly increased from 18.3 million to nearly 20 million under this administration according to opposition critics. No comprehensive housing programme launched.',
+    source: 'https://glamtush.com/tinubus-renewed-hope-is-a-scam-aregbesola/',
+    sourceLabel: 'Aregbesola ADC convention speech',
+    updated: 'April 2026',
+  },
+  {
+    id: 9,
+    title: 'Pass landmark tax reform legislation',
+    category: 'Economy',
+    status: 'kept',
+    promise: 'Raise Nigeria\'s tax-to-GDP ratio, enhance fiscal transparency, and reduce revenue leakages through comprehensive tax reform.',
+    assessment: 'Four major tax reform bills signed into law on June 26, 2025: the Nigeria Tax Act, Nigeria Tax Administration Act, Nigeria Revenue Service Establishment Act, and Joint Revenue Board Establishment Act. Laws take effect January 2026.',
+    source: 'https://punchng.com/tracking-tinubus-five-major-economic-pledges/',
+    sourceLabel: 'Punch — tracking five economic pledges',
+    updated: 'June 2025',
+  },
+  {
+    id: 10,
+    title: 'Boost food security and local agricultural production',
+    category: 'Agriculture',
+    status: 'partial',
+    promise: 'Boost food production through a new agricultural policy, commodity exchanges, and supporting young farmers. Food security listed as a top 8-point agenda item.',
+    assessment: 'Food inflation eased somewhat by late 2025 due to harvest cycles. No commodity exchange has been established. Youth farmer programme details remain unclear. Poverty levels described by analysts as continuing to rise despite food price moderation.',
+    source: 'https://punchng.com/tracking-tinubus-five-major-economic-pledges/',
+    sourceLabel: 'Punch — tracking five economic pledges',
+    updated: 'December 2025',
+  },
+  {
+    id: 11,
+    title: 'Fight corruption and strengthen rule of law',
+    category: 'Governance',
+    status: 'pending',
+    promise: 'Fight corruption to its knees, support anti-corruption agencies, and not relent on Buhari\'s anti-corruption fight. Establish rule of law as a core pillar.',
+    assessment: 'Tax reform bills include transparency provisions. However, critics including NLC and opposition note that anti-corruption action has not been visible. No high-profile convictions of political figures have occurred.',
+    source: 'https://dailytrust.com/tinubus-unfulfilled-promises-2025/',
+    sourceLabel: 'Daily Trust — 2025 unfulfilled promises',
+    updated: 'December 2025',
+  },
+  {
+    id: 12,
+    title: 'End overlapping budget cycles',
+    category: 'Governance',
+    status: 'broken',
+    promise: 'Promised in December 2025 that by March 31, 2026, all capital liabilities from previous budgets would be fully funded and closed — ending Nigeria\'s habit of running three budgets in one flow.',
+    assessment: 'The Senate extended the 2025 budget capital implementation to June 2026 in April 2026 — the second extension. The overlapping cycle Tinubu explicitly promised to terminate has continued.',
+    source: 'https://allafrica.com/stories/202604010059.html',
+    sourceLabel: 'AllAfrica — Senate budget extension',
+    updated: 'April 2026',
+  },
+  {
+    id: 13,
+    title: 'Empower youth through tech, sports and entrepreneurship',
+    category: 'Youth',
+    status: 'partial',
+    promise: 'Invest in sports, entertainment, culture, youth empowerment and entrepreneurship to expand job opportunities for millions of Nigerian youths. Harness digital economy for young Nigerians.',
+    assessment: 'Ministry of Digital Economy has run tech skills programmes. Telecom sector recorded significant capital inflows. However, data costs increased, youth unemployment remains unacceptably high, and the promised youth conference has not been held.',
+    source: 'https://www.bsg.ox.ac.uk/blog/midterm-assessment-evaluating-president-tinubus-first-two-years-office',
+    sourceLabel: 'Oxford Blavatnik School — midterm assessment',
+    updated: 'May 2025',
+  },
+  {
+    id: 14,
+    title: 'Launch major infrastructure projects — roads and rail',
+    category: 'Infrastructure',
+    status: 'partial',
+    promise: 'Modernise and expand public infrastructure. Flagged major projects including the Lagos–Calabar Coastal Highway, Sokoto–Badagry Superhighway, Abuja–Kaduna–Kano Road, and rail expansion.',
+    assessment: 'Projects were officially flagged off in June 2025. Implementation is ongoing but contested. Budget capital component has been extended twice — raising implementation credibility concerns.',
+    source: 'https://punchng.com/tracking-tinubus-five-major-economic-pledges/',
+    sourceLabel: 'Punch — tracking five economic pledges',
+    updated: 'October 2025',
+  },
+];
+
+let activeStatus = 'all';
+let expandedId = null;
+
+const BADGE_LABEL = { kept: 'Kept', broken: 'Broken', partial: 'Partial', pending: 'In progress' };
+
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const cat = document.getElementById('cat-filter').value;
+  return promises.filter(p => {
+    const matchStatus = activeStatus === 'all' || p.status === activeStatus;
+    const matchCat = cat === 'all' || p.category === cat;
+    const matchQ = !q || p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.promise.toLowerCase().includes(q);
+    return matchStatus && matchCat && matchQ;
+  });
+}
+
+function renderStats() {
+  const counts = { kept: 0, partial: 0, broken: 0, pending: 0 };
+  promises.forEach(p => counts[p.status]++);
+  const total = promises.length;
+  document.getElementById('stats').innerHTML = `
+    <div class="pt-stat">
+      <div class="pt-stat-value total">${total}</div>
+      <div class="pt-stat-label">Total tracked</div>
+    </div>
+    <div class="pt-stat">
+      <div class="pt-stat-value kept">${counts.kept}</div>
+      <div class="pt-stat-label">Kept</div>
+    </div>
+    <div class="pt-stat">
+      <div class="pt-stat-value partial">${counts.partial}</div>
+      <div class="pt-stat-label">Partial / mixed</div>
+    </div>
+    <div class="pt-stat">
+      <div class="pt-stat-value broken">${counts.broken}</div>
+      <div class="pt-stat-label">Broken</div>
+    </div>
+  `;
+  const bar = document.getElementById('progress-bar');
+  bar.innerHTML = `
+    <div class="pt-bar-kept"    style="width:${(counts.kept/total*100).toFixed(1)}%"></div>
+    <div class="pt-bar-partial" style="width:${(counts.partial/total*100).toFixed(1)}%"></div>
+    <div class="pt-bar-broken"  style="width:${(counts.broken/total*100).toFixed(1)}%"></div>
+    <div class="pt-bar-pending" style="width:${(counts.pending/total*100).toFixed(1)}%"></div>
+  `;
+}
+
+function renderFilters() {
+  const cats = [...new Set(promises.map(p => p.category))].sort();
+  const sel = document.getElementById('cat-filter');
+  cats.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    sel.appendChild(o);
+  });
+  const fg = document.getElementById('status-filters');
+  fg.innerHTML = '';
+  STATUSES.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'pt-filter-btn' + (s.key === activeStatus ? ' active' : '');
+    btn.textContent = s.label;
+    btn.onclick = () => { activeStatus = s.key; renderFilters(); render(); };
+    fg.appendChild(btn);
+  });
+}
+
+function render() {
+  const filtered = getFiltered();
+  const list = document.getElementById('list');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="pt-empty">No promises match your filters.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(p => `
+    <div class="pt-card${expandedId === p.id ? ' expanded' : ''}" data-id="${p.id}" onclick="toggle(${p.id})">
+      <div class="pt-card-header">
+        <div class="pt-card-meta">
+          <div class="pt-card-category">${p.category}</div>
+          <div class="pt-card-title">${p.title}</div>
+        </div>
+        <div class="pt-card-right">
+          <span class="pt-badge pt-badge-${p.status}">${BADGE_LABEL[p.status]}</span>
+          <span class="pt-chevron">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2.5 4.5L6.5 8.5L10.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div class="pt-card-detail-wrap">
+        <div class="pt-card-detail-inner">
+          <div class="pt-card-detail">
+            <div class="pt-detail-grid">
+              <div>
+                <div class="pt-detail-label">The promise</div>
+                <div class="pt-detail-text">${p.promise}</div>
+              </div>
+              <div>
+                <div class="pt-detail-label">Assessment</div>
+                <div class="pt-detail-text">${p.assessment}</div>
+              </div>
+            </div>
+            <div class="pt-detail-footer">
+              <span>Source:</span>
+              <a class="pt-source-link" href="${p.source}" target="_blank" onclick="event.stopPropagation()">${p.sourceLabel}</a>
+              <span>· Updated ${p.updated}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggle(id) {
+  const wasExpanded = expandedId === id;
+  if (expandedId !== null) {
+    const prev = document.querySelector(`.pt-card[data-id="${expandedId}"]`);
+    if (prev) prev.classList.remove('expanded');
+  }
+  expandedId = wasExpanded ? null : id;
+  if (expandedId !== null) {
+    const card = document.querySelector(`.pt-card[data-id="${expandedId}"]`);
+    if (card) card.classList.add('expanded');
+  }
+}
+
+renderStats();
+renderFilters();
+render();
+</script>
