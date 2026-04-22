@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import PromiseCard from './components/PromiseCard.vue'
+import PromiseCard  from './components/PromiseCard.vue'
+import HistoryChart from './components/HistoryChart.vue'
+
+const LAST_REVIEWED = 'April 2026'
 
 const STATUSES = [
   { key: 'all',     label: 'All' },
@@ -10,27 +13,65 @@ const STATUSES = [
   { key: 'pending', label: 'In progress' },
 ]
 
-const promises  = ref([])
-const inherited = ref([])
+const promises     = ref([])
+const inherited    = ref([])
+const history      = ref([])
 const activeTab      = ref('promises')
 const activeStatus   = ref('all')
 const activeCategory = ref('all')
 const searchQuery    = ref('')
+const expandedId     = ref(null)
+const copied         = ref(false)
 
 onMounted(async () => {
-  const [p, i] = await Promise.all([
+  const [p, i, h] = await Promise.all([
     fetch('/promises.json').then(r => r.json()),
     fetch('/inherited.json').then(r => r.json()),
+    fetch('/history.json').then(r => r.json()),
   ])
   promises.value  = p
   inherited.value = i
+  history.value   = h
+
+  // Deep-link: open card specified by ?id= on load
+  const params = new URLSearchParams(window.location.search)
+  const id = parseInt(params.get('id'))
+  if (id) expandedId.value = id
 })
+
+// ── Tab switching ─────────────────────────────────────
 
 function switchTab(tab) {
   activeTab.value      = tab
   activeStatus.value   = 'all'
   activeCategory.value = 'all'
   searchQuery.value    = ''
+  setExpanded(null)
+}
+
+// ── Deep-link ─────────────────────────────────────────
+
+function setExpanded(id) {
+  expandedId.value = id
+  const url = new URL(window.location)
+  if (id) {
+    url.searchParams.set('id', id)
+  } else {
+    url.searchParams.delete('id')
+  }
+  history.replaceState(null, '', url)
+}
+
+function handleToggle(id) {
+  setExpanded(expandedId.value === id ? null : id)
+}
+
+async function handleShare(id) {
+  const url = new URL(window.location)
+  url.searchParams.set('id', id)
+  await navigator.clipboard.writeText(url.toString())
+  copied.value = true
+  setTimeout(() => { copied.value = false }, 2000)
 }
 
 // ── Promises tab ──────────────────────────────────────
@@ -50,25 +91,17 @@ const filteredPromises = computed(() => {
   return promises.value.filter(p => {
     const matchStatus = activeStatus.value === 'all' || p.status === activeStatus.value
     const matchCat    = activeCategory.value === 'all' || p.category === activeCategory.value
-    const matchQ      = !q || p.title.toLowerCase().includes(q)
-                           || p.category.toLowerCase().includes(q)
-                           || p.promise.toLowerCase().includes(q)
+    const matchQ      = !q
+      || p.title.toLowerCase().includes(q)
+      || p.category.toLowerCase().includes(q)
+      || p.promise.toLowerCase().includes(q)
     return matchStatus && matchCat && matchQ
   })
 })
 
 const promiseTotal = computed(() => promises.value.length)
 
-const promiseBarWidths = computed(() => {
-  const t = promiseTotal.value || 1
-  const c = promiseCounts.value
-  return {
-    kept:    ((c.kept    / t) * 100).toFixed(1) + '%',
-    partial: ((c.partial / t) * 100).toFixed(1) + '%',
-    broken:  ((c.broken  / t) * 100).toFixed(1) + '%',
-    pending: ((c.pending / t) * 100).toFixed(1) + '%',
-  }
-})
+function pct(n) { return ((n / (promiseTotal.value || 1)) * 100).toFixed(1) + '%' }
 
 // ── Inherited tab ─────────────────────────────────────
 
@@ -78,13 +111,7 @@ const inheritedCounts = computed(() => ({
   total:   inherited.value.length,
 }))
 
-const inheritedBarWidths = computed(() => {
-  const t = inheritedCounts.value.total || 1
-  return {
-    fixed:   ((inheritedCounts.value.fixed   / t) * 100).toFixed(1) + '%',
-    partial: ((inheritedCounts.value.partial / t) * 100).toFixed(1) + '%',
-  }
-})
+function iPct(n) { return ((n / (inheritedCounts.value.total || 1)) * 100).toFixed(1) + '%' }
 </script>
 
 <template>
@@ -97,18 +124,23 @@ const inheritedBarWidths = computed(() => {
       <div class="pt-subline">
         <span>Renewed Hope Agenda</span>
         <span class="pt-subline-sep"></span>
-        <span>Updated April 2026</span>
-        <span class="pt-subline-sep"></span>
         <span>2027 election countdown</span>
       </div>
+    </div>
+
+    <!-- Freshness banner -->
+    <div class="pt-freshness">
+      <span class="pt-freshness-dot"></span>
+      Data last reviewed <strong>{{ LAST_REVIEWED }}</strong>
+      &nbsp;·&nbsp; Sources linked on each card
     </div>
 
     <!-- Tabs -->
     <div class="pt-tabs">
       <button
         v-for="tab in [
-          { key: 'promises',  label: 'Campaign Promises',        count: promises.length },
-          { key: 'inherited', label: 'Inherited Problems Fixed',  count: inherited.length },
+          { key: 'promises',  label: 'Campaign Promises',       count: promises.length },
+          { key: 'inherited', label: 'Inherited Problems Fixed', count: inherited.length },
         ]"
         :key="tab.key"
         :class="['pt-tab-btn', { active: activeTab === tab.key }]"
@@ -119,10 +151,14 @@ const inheritedBarWidths = computed(() => {
       </button>
     </div>
 
+    <!-- Copied toast -->
+    <Transition name="toast">
+      <div v-if="copied" class="pt-toast">Link copied to clipboard</div>
+    </Transition>
+
     <!-- ── PROMISES TAB ── -->
     <template v-if="activeTab === 'promises'">
 
-      <!-- Stats -->
       <div class="pt-stats">
         <div class="pt-stat">
           <div class="pt-stat-value total">{{ promiseTotal }}</div>
@@ -142,13 +178,12 @@ const inheritedBarWidths = computed(() => {
         </div>
       </div>
 
-      <!-- Progress bar -->
       <div class="pt-progress-section">
         <div class="pt-progress-bar">
-          <div class="pt-bar-kept"    :style="{ width: promiseBarWidths.kept }"></div>
-          <div class="pt-bar-partial" :style="{ width: promiseBarWidths.partial }"></div>
-          <div class="pt-bar-broken"  :style="{ width: promiseBarWidths.broken }"></div>
-          <div class="pt-bar-pending" :style="{ width: promiseBarWidths.pending }"></div>
+          <div class="pt-bar-kept"    :style="{ width: pct(promiseCounts.kept) }"></div>
+          <div class="pt-bar-partial" :style="{ width: pct(promiseCounts.partial) }"></div>
+          <div class="pt-bar-broken"  :style="{ width: pct(promiseCounts.broken) }"></div>
+          <div class="pt-bar-pending" :style="{ width: pct(promiseCounts.pending) }"></div>
         </div>
         <div class="pt-legend">
           <div class="pt-legend-item"><span class="pt-legend-dot kept"></span> Kept</div>
@@ -157,6 +192,9 @@ const inheritedBarWidths = computed(() => {
           <div class="pt-legend-item"><span class="pt-legend-dot pending"></span> In progress</div>
         </div>
       </div>
+
+      <!-- History chart -->
+      <HistoryChart :history="history" />
 
       <!-- Controls -->
       <div class="pt-controls">
@@ -180,7 +218,6 @@ const inheritedBarWidths = computed(() => {
         </select>
       </div>
 
-      <!-- List -->
       <div class="pt-list">
         <PromiseCard
           v-for="p in filteredPromises"
@@ -190,6 +227,9 @@ const inheritedBarWidths = computed(() => {
           :field2="p.assessment"
           label1="The promise"
           label2="Assessment"
+          :isExpanded="expandedId === p.id"
+          @toggle="handleToggle"
+          @share="handleShare"
         />
         <div v-if="!filteredPromises.length" class="pt-empty">
           No promises match your filters.
@@ -200,7 +240,6 @@ const inheritedBarWidths = computed(() => {
     <!-- ── INHERITED TAB ── -->
     <template v-else>
 
-      <!-- Stats -->
       <div class="pt-stats">
         <div class="pt-stat">
           <div class="pt-stat-value total">{{ inheritedCounts.total }}</div>
@@ -216,11 +255,10 @@ const inheritedBarWidths = computed(() => {
         </div>
       </div>
 
-      <!-- Progress bar -->
       <div class="pt-progress-section">
         <div class="pt-progress-bar">
-          <div class="pt-bar-kept"    :style="{ width: inheritedBarWidths.fixed }"></div>
-          <div class="pt-bar-partial" :style="{ width: inheritedBarWidths.partial }"></div>
+          <div class="pt-bar-kept"    :style="{ width: iPct(inheritedCounts.fixed) }"></div>
+          <div class="pt-bar-partial" :style="{ width: iPct(inheritedCounts.partial) }"></div>
         </div>
         <div class="pt-legend">
           <div class="pt-legend-item"><span class="pt-legend-dot kept"></span> Fixed</div>
@@ -228,7 +266,6 @@ const inheritedBarWidths = computed(() => {
         </div>
       </div>
 
-      <!-- List -->
       <div class="pt-list">
         <PromiseCard
           v-for="p in inherited"
@@ -238,6 +275,9 @@ const inheritedBarWidths = computed(() => {
           :field2="p.resolution"
           label1="The problem"
           label2="What was done"
+          :isExpanded="expandedId === p.id"
+          @toggle="handleToggle"
+          @share="handleShare"
         />
       </div>
     </template>
