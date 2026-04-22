@@ -407,6 +407,101 @@ body { background: var(--pt-bg); }
 
 .pt-source-link:hover { text-decoration: underline; }
 
+/* ── Freshness banner ── */
+.pt-freshness {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--pt-text-faint);
+  margin-bottom: 1.75rem;
+}
+
+.pt-freshness strong { color: var(--pt-text-muted); font-weight: 600; }
+
+.pt-freshness-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pt-kept-bar);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px oklch(56% 0.14 145 / 20%);
+}
+
+/* ── Share button ── */
+.pt-share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  color: var(--pt-text-faint);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.12s, background 0.12s;
+  flex-shrink: 0;
+}
+
+.pt-share-btn:hover {
+  color: var(--pt-text-muted);
+  background: var(--pt-border-light);
+}
+
+/* ── Toast ── */
+.pt-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--pt-text);
+  color: var(--pt-bg);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 8px;
+  z-index: 100;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.toast-enter-active, .toast-leave-active { transition: opacity 0.2s, transform 0.2s; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateX(-50%) translateY(8px); }
+
+/* ── History chart ── */
+.pt-chart {
+  margin-bottom: 2.5rem;
+  padding: 20px;
+  border: 1px solid var(--pt-border);
+  border-radius: 8px;
+  background: var(--pt-surface);
+}
+
+.pt-chart-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pt-text-faint);
+  margin-bottom: 16px;
+}
+
+.pt-chart-scroll {
+  overflow-x: auto;
+  margin-bottom: 12px;
+}
+
+.pt-chart-svg { display: block; }
+
+.pt-chart-label {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 10.5px;
+  fill: var(--pt-text-faint);
+}
+
+.pt-chart-legend { margin-top: 4px; }
+
 /* ── Empty state ── */
 .pt-empty {
   padding: 3.5rem 0;
