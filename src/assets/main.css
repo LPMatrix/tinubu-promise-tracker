@@ -32,8 +32,8 @@ body { background: var(--pt-bg); }
   font-family: 'Instrument Sans', sans-serif;
   background: var(--pt-bg);
   color: var(--pt-text);
-  padding: 2.5rem clamp(1rem, 5vw, 3rem) 5rem;
-  max-width: 900px;
+  padding: 2.5rem clamp(1rem, 5vw, 4rem) 5rem;
+  max-width: 1200px;
   margin: 0 auto;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -355,6 +355,12 @@ body { background: var(--pt-bg); }
 /* bills */
 .pt-badge-passed      { background: var(--pt-kept-bg);      color: var(--pt-kept); }
 .pt-badge-abandoned   { background: var(--pt-broken-bg);    color: var(--pt-broken); }
+/* judgments */
+.pt-badge-won         { background: var(--pt-kept-bg);      color: var(--pt-kept); }
+.pt-badge-lost        { background: var(--pt-broken-bg);    color: var(--pt-broken); }
+.pt-badge-settled     { background: var(--pt-partial-bg);   color: var(--pt-partial); }
+/* appointments */
+.pt-badge-serving     { background: var(--pt-kept-bg);      color: var(--pt-kept); }
 
 /* ── Chevron ── */
 .pt-chevron {
@@ -525,7 +531,7 @@ body { background: var(--pt-bg); }
 
 /* ── Fraud intro ── */
 .pt-fraud-intro {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto 1.5rem;
   padding: 14px 20px;
   background: oklch(96% 0.02 22);
@@ -547,7 +553,7 @@ body { background: var(--pt-bg); }
 
 /* ── Tab intro banners ── */
 .pt-tab-intro {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto 1.5rem;
   padding: 14px 20px;
   background: oklch(96.5% 0.008 255);
@@ -560,7 +566,7 @@ body { background: var(--pt-bg); }
 
 /* ── BudgetView ── */
 .bv-wrap {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
@@ -720,6 +726,118 @@ body { background: var(--pt-bg); }
   color: var(--pt-text-faint);
   border-top: 1px solid var(--pt-border-light);
   padding-top: 12px;
+}
+
+/* ── IndicatorsView ── */
+.iv-wrap { max-width: 960px; margin: 0 auto; }
+
+.iv-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.iv-sel-btn {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border: 1.5px solid var(--pt-border);
+  border-radius: 20px;
+  background: var(--pt-surface);
+  color: var(--pt-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.iv-sel-btn:hover { border-color: var(--pt-text-muted); color: var(--pt-text); }
+.iv-sel-btn.active {
+  background: var(--pt-text);
+  border-color: var(--pt-text);
+  color: var(--pt-surface);
+}
+
+.iv-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--pt-border);
+  border: 1px solid var(--pt-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.iv-stat {
+  background: var(--pt-surface);
+  padding: 14px 18px;
+}
+
+.iv-stat-lbl {
+  font-size: 11.5px;
+  color: var(--pt-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 5px;
+}
+
+.iv-stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pt-text);
+}
+
+.iv-change.up   { color: oklch(38% 0.13 22); }
+.iv-change.down { color: oklch(38% 0.13 145); }
+
+.iv-hover-stat { background: oklch(97% 0.008 80); }
+
+.iv-chart-scroll {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border: 1px solid var(--pt-border-light);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--pt-surface);
+}
+
+.iv-note {
+  font-size: 12.5px;
+  color: oklch(48% 0.16 68);
+  background: oklch(97% 0.04 68);
+  border-left: 3px solid oklch(60% 0.17 68);
+  padding: 8px 14px;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  line-height: 1.45;
+}
+
+.iv-desc {
+  font-size: 13px;
+  color: var(--pt-text-muted);
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+}
+
+.iv-source {
+  font-size: 12px;
+  color: var(--pt-text-faint);
+  border-top: 1px solid var(--pt-border-light);
+  padding-top: 12px;
+}
+
+/* ── Appointments card extra: geopolitical tag ── */
+.pt-geo-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: oklch(93% 0.006 80);
+  color: var(--pt-text-muted);
+  margin-left: 6px;
+  vertical-align: middle;
 }
 
 /* ── Responsive ── */

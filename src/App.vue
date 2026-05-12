@@ -2,7 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import PromiseCard  from './components/PromiseCard.vue'
 import HistoryChart from './components/HistoryChart.vue'
-import BudgetView   from './components/BudgetView.vue'
+import BudgetView      from './components/BudgetView.vue'
+import IndicatorsView  from './components/IndicatorsView.vue'
 
 const LAST_REVIEWED = 'April 2026'
 
@@ -21,6 +22,9 @@ const orders       = ref([])
 const ministers    = ref([])
 const budget       = ref([])
 const bills        = ref([])
+const indicators   = ref([])
+const appointments = ref([])
+const judgments    = ref([])
 const history      = ref([])
 const activeTab      = ref('promises')
 const activeStatus   = ref('all')
@@ -30,7 +34,7 @@ const expandedId     = ref(null)
 const copied         = ref(false)
 
 onMounted(async () => {
-  const [p, i, h, f, o, m, bu, bi] = await Promise.all([
+  const [p, i, h, f, o, m, bu, bi, ind, ap, j] = await Promise.all([
     fetch('/promises.json').then(r => r.json()),
     fetch('/inherited.json').then(r => r.json()),
     fetch('/history.json').then(r => r.json()),
@@ -39,15 +43,21 @@ onMounted(async () => {
     fetch('/ministers.json').then(r => r.json()),
     fetch('/budget.json').then(r => r.json()),
     fetch('/bills.json').then(r => r.json()),
+    fetch('/indicators.json').then(r => r.json()),
+    fetch('/appointments.json').then(r => r.json()),
+    fetch('/judgments.json').then(r => r.json()),
   ])
-  promises.value  = p
-  inherited.value = i
-  history.value   = h
-  fraud.value     = f
-  orders.value    = o
-  ministers.value = m
-  budget.value    = bu
-  bills.value     = bi
+  promises.value     = p
+  inherited.value    = i
+  history.value      = h
+  fraud.value        = f
+  orders.value       = o
+  ministers.value    = m
+  budget.value       = bu
+  bills.value        = bi
+  indicators.value   = ind
+  appointments.value = ap
+  judgments.value    = j
 
   // Deep-link: open card specified by ?id= on load
   const params = new URLSearchParams(window.location.search)
@@ -244,6 +254,66 @@ const billCounts = computed(() => {
   return c
 })
 
+// ── Appointments tab ──────────────────────────────────
+
+const APPOINTMENT_STATUSES = [
+  { key: 'all',      label: 'All' },
+  { key: 'serving',  label: 'Serving' },
+  { key: 'resigned', label: 'Resigned' },
+  { key: 'sacked',   label: 'Sacked' },
+]
+
+const appointmentCategories = computed(() =>
+  [...new Set(appointments.value.map(a => a.category))].sort()
+)
+
+const filteredAppointments = computed(() => {
+  const q = searchQuery.value.toLowerCase()
+  return appointments.value.filter(a => {
+    const matchStatus = activeStatus.value === 'all' || a.status === activeStatus.value
+    const matchCat    = activeCategory.value === 'all' || a.category === activeCategory.value
+    const matchQ      = !q
+      || a.name.toLowerCase().includes(q)
+      || a.role.toLowerCase().includes(q)
+      || a.agency.toLowerCase().includes(q)
+      || a.state.toLowerCase().includes(q)
+    return matchStatus && matchCat && matchQ
+  })
+})
+
+// ── Judgments tab ─────────────────────────────────────
+
+const JUDGMENT_STATUSES = [
+  { key: 'all',     label: 'All' },
+  { key: 'lost',    label: 'Govt Lost' },
+  { key: 'won',     label: 'Govt Won' },
+  { key: 'settled', label: 'Settled' },
+  { key: 'ongoing', label: 'Ongoing' },
+]
+
+const judgmentCategories = computed(() =>
+  [...new Set(judgments.value.map(j => j.category))].sort()
+)
+
+const judgmentCounts = computed(() => {
+  const c = { lost: 0, won: 0, settled: 0, ongoing: 0 }
+  judgments.value.forEach(j => { if (c[j.status] !== undefined) c[j.status]++ })
+  return c
+})
+
+const filteredJudgments = computed(() => {
+  const q = searchQuery.value.toLowerCase()
+  return judgments.value.filter(j => {
+    const matchStatus = activeStatus.value === 'all' || j.status === activeStatus.value
+    const matchCat    = activeCategory.value === 'all' || j.category === activeCategory.value
+    const matchQ      = !q
+      || j.title.toLowerCase().includes(q)
+      || j.category.toLowerCase().includes(q)
+      || j.issue.toLowerCase().includes(q)
+    return matchStatus && matchCat && matchQ
+  })
+})
+
 const filteredBills = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return bills.value.filter(b => {
@@ -264,7 +334,7 @@ const filteredBills = computed(() => {
     <!-- Hero -->
     <div class="pt-hero">
       <div class="pt-eyebrow">Civic Accountability · Nigeria 2023–2027</div>
-      <h1 class="pt-headline">Tinubu Promise Tracker</h1>
+      <h1 class="pt-headline">NGScorecard</h1>
       <div class="pt-subline">
         <span>Renewed Hope Agenda</span>
         <span class="pt-subline-sep"></span>
@@ -283,13 +353,16 @@ const filteredBills = computed(() => {
     <div class="pt-tabs">
       <button
         v-for="tab in [
-          { key: 'promises',  label: 'Promises',        count: promises.length },
-          { key: 'inherited', label: 'Inherited Fixes',  count: inherited.length },
-          { key: 'fraud',     label: 'Fraud',            count: fraud.length },
-          { key: 'orders',    label: 'Orders & Policy',  count: orders.length },
-          { key: 'ministers', label: 'Ministers',        count: ministers.length },
-          { key: 'budget',    label: 'Budget',           count: budget.length },
-          { key: 'bills',     label: 'Bills Watch',      count: bills.length },
+          { key: 'promises',     label: 'Promises',        count: promises.length },
+          { key: 'inherited',    label: 'Inherited Fixes',  count: inherited.length },
+          { key: 'fraud',        label: 'Fraud',            count: fraud.length },
+          { key: 'orders',       label: 'Orders & Policy',  count: orders.length },
+          { key: 'ministers',    label: 'Ministers',        count: ministers.length },
+          { key: 'budget',       label: 'Budget',           count: budget.length },
+          { key: 'bills',        label: 'Bills Watch',      count: bills.length },
+          { key: 'indicators',   label: 'Key Indicators',   count: indicators.length },
+          { key: 'appointments', label: 'Appointments',     count: appointments.length },
+          { key: 'judgments',    label: 'Court Judgments',  count: judgments.length },
         ]"
         :key="tab.key"
         :class="['pt-tab-btn', { active: activeTab === tab.key }]"
@@ -678,6 +751,130 @@ const filteredBills = computed(() => {
           @share="handleShare"
         />
         <div v-if="!filteredBills.length" class="pt-empty">No bills match your filters.</div>
+      </div>
+    </template>
+
+    <!-- ── INDICATORS TAB ── -->
+    <template v-else-if="activeTab === 'indicators'">
+      <div class="pt-tab-intro">
+        Key economic metrics since May 2023 — inflation, the naira exchange rate, petrol
+        prices, GDP growth, and unemployment. Context for every other tab on this site.
+      </div>
+      <IndicatorsView :indicators="indicators" />
+    </template>
+
+    <!-- ── APPOINTMENTS TAB ── -->
+    <template v-else-if="activeTab === 'appointments'">
+      <div class="pt-tab-intro">
+        Key presidential appointments — who was picked, from where, and how they've
+        performed. Tracks state-of-origin patterns and whether appointees delivered.
+      </div>
+
+      <div class="pt-stats">
+        <div class="pt-stat">
+          <div class="pt-stat-value total">{{ appointments.length }}</div>
+          <div class="pt-stat-label">Tracked</div>
+        </div>
+        <div class="pt-stat">
+          <div class="pt-stat-value kept">{{ appointments.filter(a => a.status === 'serving').length }}</div>
+          <div class="pt-stat-label">Still serving</div>
+        </div>
+        <div class="pt-stat">
+          <div class="pt-stat-value broken">{{ appointments.filter(a => a.status === 'sacked').length }}</div>
+          <div class="pt-stat-label">Sacked</div>
+        </div>
+        <div class="pt-stat">
+          <div class="pt-stat-value partial">{{ appointments.filter(a => a.status === 'resigned').length }}</div>
+          <div class="pt-stat-label">Resigned</div>
+        </div>
+      </div>
+
+      <div class="pt-controls">
+        <input v-model="searchQuery" type="text" class="pt-search" placeholder="Search name, role, state…" />
+        <div class="pt-filter-group">
+          <button
+            v-for="s in APPOINTMENT_STATUSES" :key="s.key"
+            :class="['pt-filter-btn', { active: activeStatus === s.key }]"
+            @click="activeStatus = s.key"
+          >{{ s.label }}</button>
+        </div>
+        <select v-model="activeCategory" class="pt-cat-filter">
+          <option value="all">All categories</option>
+          <option v-for="cat in appointmentCategories" :key="cat" :value="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="pt-list">
+        <PromiseCard
+          v-for="a in filteredAppointments" :key="a.id"
+          :item="{ ...a, title: a.name, category: a.role }"
+          :field1="`${a.agency} · ${a.state} (${a.geopolitical}) · Appointed ${a.appointed}`"
+          :field2="a.note"
+          label1="Details"
+          label2="Assessment"
+          :isExpanded="expandedId === a.id"
+          @toggle="handleToggle"
+          @share="handleShare"
+        />
+        <div v-if="!filteredAppointments.length" class="pt-empty">No appointments match your filters.</div>
+      </div>
+    </template>
+
+    <!-- ── JUDGMENTS TAB ── -->
+    <template v-else-if="activeTab === 'judgments'">
+      <div class="pt-tab-intro">
+        Key court cases involving the federal government — tracking wins, losses,
+        and critically, whether court orders are actually complied with.
+      </div>
+
+      <div class="pt-stats">
+        <div class="pt-stat">
+          <div class="pt-stat-value total">{{ judgments.length }}</div>
+          <div class="pt-stat-label">Cases tracked</div>
+        </div>
+        <div class="pt-stat">
+          <div class="pt-stat-value broken">{{ judgmentCounts.lost }}</div>
+          <div class="pt-stat-label">Govt lost</div>
+        </div>
+        <div class="pt-stat">
+          <div class="pt-stat-value kept">{{ judgmentCounts.won }}</div>
+          <div class="pt-stat-label">Govt won</div>
+        </div>
+        <div class="pt-stat">
+          <div class="pt-stat-value partial">{{ judgmentCounts.settled }}</div>
+          <div class="pt-stat-label">Settled</div>
+        </div>
+      </div>
+
+      <div class="pt-controls">
+        <input v-model="searchQuery" type="text" class="pt-search" placeholder="Search cases…" />
+        <div class="pt-filter-group">
+          <button
+            v-for="s in JUDGMENT_STATUSES" :key="s.key"
+            :class="['pt-filter-btn', { active: activeStatus === s.key }]"
+            @click="activeStatus = s.key"
+          >{{ s.label }}</button>
+        </div>
+        <select v-model="activeCategory" class="pt-cat-filter">
+          <option value="all">All categories</option>
+          <option v-for="cat in judgmentCategories" :key="cat" :value="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="pt-list">
+        <PromiseCard
+          v-for="j in filteredJudgments" :key="j.id"
+          :item="{ ...j, title: j.title, category: j.category,
+                   updated: j.ruled, source: '#', sourceLabel: j.court }"
+          :field1="j.issue"
+          :field2="j.outcome"
+          label1="What the case is about"
+          label2="Ruling & compliance"
+          :isExpanded="expandedId === j.id"
+          @toggle="handleToggle"
+          @share="handleShare"
+        />
+        <div v-if="!filteredJudgments.length" class="pt-empty">No cases match your filters.</div>
       </div>
     </template>
 

@@ -35,6 +35,12 @@ const BADGE_LABEL = {
   // bills
   passed:       'Passed',
   abandoned:    'Abandoned',
+  // judgments
+  won:          'Govt Won',
+  lost:         'Govt Lost',
+  settled:      'Settled',
+  // appointments
+  serving:      'Serving',
 }
 </script>
 
