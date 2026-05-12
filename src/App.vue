@@ -264,7 +264,7 @@ const filteredBills = computed(() => {
     <!-- Hero -->
     <div class="pt-hero">
       <div class="pt-eyebrow">Civic Accountability · Nigeria 2023–2027</div>
-      <h1 class="pt-headline">Tinubu Promise Tracker</h1>
+      <h1 class="pt-headline">NGScorecard</h1>
       <div class="pt-subline">
         <span>Renewed Hope Agenda</span>
         <span class="pt-subline-sep"></span>
