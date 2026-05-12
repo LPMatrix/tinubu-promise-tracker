@@ -329,11 +329,15 @@ body { background: var(--pt-bg); }
   white-space: nowrap;
 }
 
-.pt-badge-kept    { background: var(--pt-kept-bg);    color: var(--pt-kept); }
-.pt-badge-partial { background: var(--pt-partial-bg); color: var(--pt-partial); }
-.pt-badge-broken  { background: var(--pt-broken-bg);  color: var(--pt-broken); }
-.pt-badge-pending { background: var(--pt-pending-bg); color: var(--pt-pending); }
-.pt-badge-fixed   { background: var(--pt-kept-bg);    color: var(--pt-kept); }
+.pt-badge-kept      { background: var(--pt-kept-bg);      color: var(--pt-kept); }
+.pt-badge-partial   { background: var(--pt-partial-bg);   color: var(--pt-partial); }
+.pt-badge-broken    { background: var(--pt-broken-bg);    color: var(--pt-broken); }
+.pt-badge-pending   { background: var(--pt-pending-bg);   color: var(--pt-pending); }
+.pt-badge-fixed     { background: var(--pt-kept-bg);      color: var(--pt-kept); }
+.pt-badge-convicted { background: oklch(95% 0.055 22);    color: oklch(35% 0.22 22); }
+.pt-badge-ongoing   { background: oklch(93% 0.04 255);    color: oklch(38% 0.14 255); }
+.pt-badge-dismissed { background: oklch(93% 0.005 80);    color: oklch(42% 0.01 80); }
+.pt-badge-acquitted { background: var(--pt-kept-bg);      color: var(--pt-kept); }
 
 /* ── Chevron ── */
 .pt-chevron {
@@ -501,6 +505,19 @@ body { background: var(--pt-bg); }
 }
 
 .pt-chart-legend { margin-top: 4px; }
+
+/* ── Fraud intro ── */
+.pt-fraud-intro {
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+  padding: 14px 20px;
+  background: oklch(96% 0.02 22);
+  border-left: 3px solid oklch(55% 0.19 22);
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--pt-text-muted);
+  line-height: 1.55;
+}
 
 /* ── Empty state ── */
 .pt-empty {
