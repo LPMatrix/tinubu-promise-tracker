@@ -32,8 +32,8 @@ body { background: var(--pt-bg); }
   font-family: 'Instrument Sans', sans-serif;
   background: var(--pt-bg);
   color: var(--pt-text);
-  padding: 2.5rem clamp(1rem, 5vw, 3rem) 5rem;
-  max-width: 900px;
+  padding: 2.5rem clamp(1rem, 5vw, 4rem) 5rem;
+  max-width: 1200px;
   margin: 0 auto;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -525,7 +525,7 @@ body { background: var(--pt-bg); }
 
 /* ── Fraud intro ── */
 .pt-fraud-intro {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto 1.5rem;
   padding: 14px 20px;
   background: oklch(96% 0.02 22);
@@ -547,7 +547,7 @@ body { background: var(--pt-bg); }
 
 /* ── Tab intro banners ── */
 .pt-tab-intro {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto 1.5rem;
   padding: 14px 20px;
   background: oklch(96.5% 0.008 255);
@@ -560,7 +560,7 @@ body { background: var(--pt-bg); }
 
 /* ── BudgetView ── */
 .bv-wrap {
-  max-width: 720px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
