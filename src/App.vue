@@ -329,49 +329,80 @@ const filteredBills = computed(() => {
 </script>
 
 <template>
-  <div class="pt-wrap">
+  <div class="pt-layout">
 
-    <!-- Hero -->
-    <div class="pt-hero">
-      <div class="pt-eyebrow">Civic Accountability · Nigeria 2023–2027</div>
-      <h1 class="pt-headline">NGScorecard</h1>
-      <div class="pt-subline">
-        <span>Renewed Hope Agenda</span>
-        <span class="pt-subline-sep"></span>
-        <span>2027 election countdown</span>
+    <!-- ── Sidebar ── -->
+    <aside class="pt-sidebar">
+      <div class="pt-sidebar-brand">
+        <div class="pt-eyebrow">Civic Accountability · Nigeria 2023–2027</div>
+        <h1 class="pt-headline">NGScorecard</h1>
+        <p class="pt-subline">Renewed Hope Agenda</p>
       </div>
-    </div>
 
-    <!-- Freshness banner -->
-    <div class="pt-freshness">
-      <span class="pt-freshness-dot"></span>
-      Data last reviewed <strong>{{ LAST_REVIEWED }}</strong>
-      &nbsp;·&nbsp; Sources linked on each card
-    </div>
+      <nav class="pt-nav">
+        <div class="pt-nav-group">
+          <div class="pt-nav-group-label">Government</div>
+          <button :class="['pt-nav-btn', { active: activeTab === 'promises' }]"     @click="switchTab('promises')">Promises <span class="pt-nav-count">{{ promises.length }}</span></button>
+          <button :class="['pt-nav-btn', { active: activeTab === 'ministers' }]"    @click="switchTab('ministers')">Ministers <span class="pt-nav-count">{{ ministers.length }}</span></button>
+          <button :class="['pt-nav-btn', { active: activeTab === 'orders' }]"       @click="switchTab('orders')">Orders &amp; Policy <span class="pt-nav-count">{{ orders.length }}</span></button>
+          <button :class="['pt-nav-btn', { active: activeTab === 'appointments' }]" @click="switchTab('appointments')">Appointments <span class="pt-nav-count">{{ appointments.length }}</span></button>
+        </div>
 
-    <!-- Tabs -->
-    <div class="pt-tabs">
-      <button
-        v-for="tab in [
-          { key: 'promises',     label: 'Promises',        count: promises.length },
-          { key: 'inherited',    label: 'Inherited Fixes',  count: inherited.length },
-          { key: 'fraud',        label: 'Fraud',            count: fraud.length },
-          { key: 'orders',       label: 'Orders & Policy',  count: orders.length },
-          { key: 'ministers',    label: 'Ministers',        count: ministers.length },
-          { key: 'budget',       label: 'Budget',           count: budget.length },
-          { key: 'bills',        label: 'Bills Watch',      count: bills.length },
-          { key: 'indicators',   label: 'Key Indicators',   count: indicators.length },
-          { key: 'appointments', label: 'Appointments',     count: appointments.length },
-          { key: 'judgments',    label: 'Court Judgments',  count: judgments.length },
-        ]"
-        :key="tab.key"
-        :class="['pt-tab-btn', { active: activeTab === tab.key }]"
-        @click="switchTab(tab.key)"
-      >
-        {{ tab.label }}
-        <span class="pt-tab-count">({{ tab.count }})</span>
-      </button>
-    </div>
+        <div class="pt-nav-group">
+          <div class="pt-nav-group-label">Accountability</div>
+          <button :class="['pt-nav-btn', { active: activeTab === 'fraud' }]"     @click="switchTab('fraud')">Fraud <span class="pt-nav-count">{{ fraud.length }}</span></button>
+          <button :class="['pt-nav-btn', { active: activeTab === 'judgments' }]" @click="switchTab('judgments')">Court Judgments <span class="pt-nav-count">{{ judgments.length }}</span></button>
+          <button :class="['pt-nav-btn', { active: activeTab === 'inherited' }]" @click="switchTab('inherited')">Inherited Fixes <span class="pt-nav-count">{{ inherited.length }}</span></button>
+        </div>
+
+        <div class="pt-nav-group">
+          <div class="pt-nav-group-label">Economy</div>
+          <button :class="['pt-nav-btn', { active: activeTab === 'budget' }]"     @click="switchTab('budget')">Budget</button>
+          <button :class="['pt-nav-btn', { active: activeTab === 'indicators' }]" @click="switchTab('indicators')">Key Indicators</button>
+        </div>
+
+        <div class="pt-nav-group">
+          <div class="pt-nav-group-label">Legislature</div>
+          <button :class="['pt-nav-btn', { active: activeTab === 'bills' }]" @click="switchTab('bills')">Bills Watch <span class="pt-nav-count">{{ bills.length }}</span></button>
+        </div>
+      </nav>
+
+      <div class="pt-sidebar-footer">
+        <span class="pt-freshness-dot"></span>
+        Updated <strong>{{ LAST_REVIEWED }}</strong> · Sources on each card
+      </div>
+    </aside>
+
+    <!-- ── Mobile header ── -->
+    <header class="pt-mobile-header">
+      <div class="pt-mobile-brand">
+        <div class="pt-eyebrow">Nigeria 2023–2027</div>
+        <strong class="pt-mobile-title">NGScorecard</strong>
+      </div>
+      <select class="pt-mobile-nav" :value="activeTab" @change="switchTab($event.target.value)">
+        <optgroup label="Government">
+          <option value="promises">Promises</option>
+          <option value="ministers">Ministers</option>
+          <option value="orders">Orders &amp; Policy</option>
+          <option value="appointments">Appointments</option>
+        </optgroup>
+        <optgroup label="Accountability">
+          <option value="fraud">Fraud</option>
+          <option value="judgments">Court Judgments</option>
+          <option value="inherited">Inherited Fixes</option>
+        </optgroup>
+        <optgroup label="Economy">
+          <option value="budget">Budget</option>
+          <option value="indicators">Key Indicators</option>
+        </optgroup>
+        <optgroup label="Legislature">
+          <option value="bills">Bills Watch</option>
+        </optgroup>
+      </select>
+    </header>
+
+    <!-- ── Main content ── -->
+    <main class="pt-content">
 
     <!-- Copied toast -->
     <Transition name="toast">
@@ -878,5 +909,6 @@ const filteredBills = computed(() => {
       </div>
     </template>
 
+    </main>
   </div>
 </template>

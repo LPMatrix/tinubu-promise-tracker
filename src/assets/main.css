@@ -28,96 +28,147 @@
 
 body { background: var(--pt-bg); }
 
-.pt-wrap {
+/* ── Layout ── */
+.pt-layout {
   font-family: 'Instrument Sans', sans-serif;
-  background: var(--pt-bg);
   color: var(--pt-text);
-  padding: 2.5rem clamp(1rem, 5vw, 4rem) 5rem;
-  max-width: 1200px;
-  margin: 0 auto;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* ── Hero ── */
-.pt-hero {
-  margin-bottom: 2.5rem;
-  padding-bottom: 2rem;
+/* ── Sidebar ── */
+.pt-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 2rem 1.25rem;
+  border-right: 1px solid var(--pt-border);
+  background: var(--pt-surface);
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+.pt-sidebar::-webkit-scrollbar { display: none; }
+
+.pt-sidebar-brand {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--pt-border);
 }
 
 .pt-eyebrow {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--pt-text-faint);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
 .pt-headline {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(26px, 4.5vw, 42px);
+  font-size: 22px;
   font-weight: 800;
-  line-height: 1.12;
+  line-height: 1.15;
   color: var(--pt-text);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.35rem;
   letter-spacing: -0.02em;
 }
 
 .pt-subline {
+  font-size: 12px;
+  color: var(--pt-text-muted);
+  margin: 0;
+}
+
+/* ── Sidebar nav ── */
+.pt-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pt-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.pt-nav-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pt-text-faint);
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.pt-nav-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-size: 14px;
-  color: var(--pt-text-muted);
-}
-
-.pt-subline-sep {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--pt-text-faint);
-  flex-shrink: 0;
-}
-
-/* ── Tabs ── */
-.pt-tabs {
-  display: flex;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid var(--pt-border);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.pt-tabs::-webkit-scrollbar { display: none; }
-
-.pt-tab-btn {
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  background: none;
+  border-radius: 5px;
   font-family: 'Instrument Sans', sans-serif;
   font-size: 13.5px;
   font-weight: 500;
-  padding: 10px 18px;
-  border: none;
-  background: none;
   color: var(--pt-text-muted);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: color 0.15s, border-color 0.15s;
-  white-space: nowrap;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
 }
 
-.pt-tab-btn:hover { color: var(--pt-text); }
-
-.pt-tab-btn.active {
+.pt-nav-btn:hover {
+  background: var(--pt-bg);
   color: var(--pt-text);
-  border-bottom-color: var(--pt-text);
+}
+
+.pt-nav-btn.active {
+  background: var(--pt-bg);
+  color: var(--pt-text);
   font-weight: 600;
 }
 
-.pt-tab-count {
-  opacity: 0.5;
+.pt-nav-count {
+  font-size: 11px;
+  color: var(--pt-text-faint);
   font-weight: 400;
+}
+
+/* ── Sidebar footer ── */
+.pt-sidebar-footer {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--pt-border);
+  font-size: 11px;
+  color: var(--pt-text-faint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── Main content ── */
+.pt-content {
+  padding: 2.5rem clamp(1.5rem, 4vw, 3rem) 5rem;
+  min-width: 0;
+  background: var(--pt-bg);
+}
+
+/* ── Mobile header (hidden on desktop) ── */
+.pt-mobile-header {
+  display: none;
 }
 
 /* ── Stats ── */
@@ -841,6 +892,54 @@ body { background: var(--pt-bg); }
 }
 
 /* ── Responsive ── */
+@media (max-width: 720px) {
+  .pt-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .pt-sidebar { display: none; }
+
+  .pt-mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--pt-border);
+    background: var(--pt-surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .pt-mobile-brand .pt-eyebrow { font-size: 9px; }
+
+  .pt-mobile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    display: block;
+  }
+
+  .pt-mobile-nav {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 1px solid var(--pt-border);
+    border-radius: 6px;
+    background: var(--pt-surface);
+    color: var(--pt-text);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .pt-content {
+    padding: 1.5rem 1rem 4rem;
+  }
+}
+
 @media (max-width: 520px) {
   .pt-stats { flex-wrap: wrap; }
   .pt-stat { min-width: 50%; border-bottom: 1px solid var(--pt-border); }
