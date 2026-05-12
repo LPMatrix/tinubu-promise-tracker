@@ -11,11 +11,15 @@ const props = defineProps({
 const emit = defineEmits(['toggle'])
 
 const BADGE_LABEL = {
-  kept:    'Kept',
-  broken:  'Broken',
-  partial: 'Partial',
-  pending: 'In progress',
-  fixed:   'Fixed',
+  kept:      'Kept',
+  broken:    'Broken',
+  partial:   'Partial',
+  pending:   'In progress',
+  fixed:     'Fixed',
+  convicted: 'Convicted',
+  ongoing:   'Ongoing',
+  dismissed: 'Dismissed',
+  acquitted: 'Acquitted',
 }
 </script>
 
