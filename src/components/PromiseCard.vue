@@ -11,15 +11,30 @@ const props = defineProps({
 const emit = defineEmits(['toggle'])
 
 const BADGE_LABEL = {
-  kept:      'Kept',
-  broken:    'Broken',
-  partial:   'Partial',
-  pending:   'In progress',
-  fixed:     'Fixed',
-  convicted: 'Convicted',
-  ongoing:   'Ongoing',
-  dismissed: 'Dismissed',
-  acquitted: 'Acquitted',
+  // promises
+  kept:         'Kept',
+  broken:       'Broken',
+  partial:      'Partial',
+  pending:      'In progress',
+  fixed:        'Fixed',
+  // fraud
+  convicted:    'Convicted',
+  ongoing:      'Ongoing',
+  dismissed:    'Dismissed',
+  acquitted:    'Acquitted',
+  // orders
+  implemented:  'Implemented',
+  reversed:     'Reversed',
+  ignored:      'Ignored',
+  // ministers
+  good:         'Good',
+  fair:         'Fair',
+  poor:         'Poor',
+  sacked:       'Sacked',
+  resigned:     'Resigned',
+  // bills
+  passed:       'Passed',
+  abandoned:    'Abandoned',
 }
 </script>
 
