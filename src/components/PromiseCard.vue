@@ -3,12 +3,14 @@ const props = defineProps({
   item:       { type: Object,  required: true },
   field1:     { type: String,  required: true },
   field2:     { type: String,  required: true },
+  field3:     { type: String,  default: null },
   label1:     { type: String,  default: 'The promise' },
   label2:     { type: String,  default: 'Assessment' },
+  label3:     { type: String,  default: 'Govt response' },
   isExpanded: { type: Boolean, default: false },
 })
 
-const emit = defineEmits(['toggle'])
+const emit = defineEmits(['toggle', 'share'])
 
 const BADGE_LABEL = {
   // promises
@@ -17,11 +19,17 @@ const BADGE_LABEL = {
   partial:      'Partial',
   pending:      'In progress',
   fixed:        'Fixed',
-  // fraud
+  // fraud case status
   convicted:    'Convicted',
   ongoing:      'Ongoing',
   dismissed:    'Dismissed',
   acquitted:    'Acquitted',
+  // fraud govt response
+  pursuing:     'Pursuing',
+  stalled:      'Stalled',
+  political:    'Politicised',
+  abandoned:    'Abandoned',
+  complied:     'No interference',
   // orders
   implemented:  'Implemented',
   reversed:     'Reversed',
@@ -34,7 +42,6 @@ const BADGE_LABEL = {
   resigned:     'Resigned',
   // bills
   passed:       'Passed',
-  abandoned:    'Abandoned',
   // judgments
   won:          'Govt Won',
   lost:         'Govt Lost',
@@ -52,12 +59,18 @@ const BADGE_LABEL = {
         <div class="pt-card-title">{{ item.title }}</div>
       </div>
       <div class="pt-card-right">
+        <!-- Primary status badge -->
         <span :class="['pt-badge', `pt-badge-${item.status}`]">
           {{ BADGE_LABEL[item.status] }}
         </span>
+        <!-- Secondary response verdict badge (fraud tab) -->
+        <span
+          v-if="item.responseVerdict"
+          :class="['pt-badge', 'pt-badge-response', `pt-badge-rv-${item.responseVerdict}`]"
+        >{{ BADGE_LABEL[item.responseVerdict] }}</span>
         <button
           class="pt-share-btn"
-          :title="`Copy link to promise #${item.id}`"
+          :title="`Copy link to #${item.id}`"
           @click.stop="emit('share', item.id)"
         >
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
@@ -84,6 +97,11 @@ const BADGE_LABEL = {
               <div class="pt-detail-label">{{ label2 }}</div>
               <div class="pt-detail-text">{{ field2 }}</div>
             </div>
+          </div>
+          <!-- Third field: government response narrative -->
+          <div v-if="field3" class="pt-detail-response">
+            <div class="pt-detail-label">{{ label3 }}</div>
+            <div class="pt-detail-text">{{ field3 }}</div>
           </div>
           <div class="pt-detail-footer">
             <span>Source:</span>

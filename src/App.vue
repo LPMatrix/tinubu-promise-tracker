@@ -101,6 +101,7 @@ function switchTab(tab) {
   activeTab.value      = tab
   activeStatus.value   = 'all'
   activeCategory.value = 'all'
+  activeResponse.value = 'all'
   searchQuery.value    = ''
   setExpanded(null)
 }
@@ -179,6 +180,17 @@ const FRAUD_STATUSES = [
   { key: 'acquitted', label: 'Acquitted' },
 ]
 
+const FRAUD_RESPONSES = [
+  { key: 'all',       label: 'All responses' },
+  { key: 'pursuing',  label: 'Pursuing' },
+  { key: 'stalled',   label: 'Stalled' },
+  { key: 'political', label: 'Politicised' },
+  { key: 'abandoned', label: 'Abandoned' },
+  { key: 'complied',  label: 'No interference' },
+]
+
+const activeResponse = ref('all')
+
 const fraudCategories = computed(() =>
   [...new Set(fraud.value.map(f => f.category))].sort()
 )
@@ -192,13 +204,14 @@ const fraudCounts = computed(() => {
 const filteredFraud = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return fraud.value.filter(f => {
-    const matchStatus = activeStatus.value === 'all' || f.status === activeStatus.value
-    const matchCat    = activeCategory.value === 'all' || f.category === activeCategory.value
-    const matchQ      = !q
+    const matchStatus   = activeStatus.value === 'all' || f.status === activeStatus.value
+    const matchResponse = activeResponse.value === 'all' || f.responseVerdict === activeResponse.value
+    const matchCat      = activeCategory.value === 'all' || f.category === activeCategory.value
+    const matchQ        = !q
       || f.title.toLowerCase().includes(q)
       || f.category.toLowerCase().includes(q)
       || f.allegation.toLowerCase().includes(q)
-    return matchStatus && matchCat && matchQ
+    return matchStatus && matchResponse && matchCat && matchQ
   })
 })
 
@@ -644,6 +657,17 @@ const filteredBills = computed(() => {
           <option v-for="cat in fraudCategories" :key="cat" :value="cat">{{ cat }}</option>
         </select>
       </div>
+      <div class="pt-controls pt-controls-response">
+        <span class="pt-response-filter-label">Govt response:</span>
+        <div class="pt-filter-group">
+          <button
+            v-for="r in FRAUD_RESPONSES"
+            :key="r.key"
+            :class="['pt-filter-btn', `pt-rfbtn-${r.key}`, { active: activeResponse === r.key }]"
+            @click="activeResponse = r.key"
+          >{{ r.label }}</button>
+        </div>
+      </div>
 
       <div class="pt-list">
         <PromiseCard
@@ -652,8 +676,10 @@ const filteredBills = computed(() => {
           :item="f"
           :field1="f.allegation"
           :field2="f.outcome"
+          :field3="f.govtResponse"
           label1="Allegation"
           label2="Outcome / Status"
+          label3="Administration's response"
           :isExpanded="expandedId === f.id"
           @toggle="handleToggle"
           @share="handleShare"
