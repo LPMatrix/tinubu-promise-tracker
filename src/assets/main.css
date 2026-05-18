@@ -87,6 +87,139 @@ body { background: var(--pt-bg); }
   margin: 0;
 }
 
+/* ── Administration switcher ── */
+.pt-admin-switcher {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--pt-border);
+}
+
+.pt-admin-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pt-text-faint);
+  margin-bottom: 8px;
+}
+
+.pt-admin-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pt-admin-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--pt-border);
+  background: none;
+  cursor: pointer;
+  font-family: 'Instrument Sans', sans-serif;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pt-admin-pill:hover {
+  background: var(--pt-bg);
+  border-color: var(--pt-text-faint);
+}
+
+.pt-admin-pill.active {
+  background: var(--pt-text);
+  border-color: var(--pt-text);
+}
+
+.pt-admin-pill-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pt-text-muted);
+}
+
+.pt-admin-pill.active .pt-admin-pill-name {
+  color: var(--pt-bg);
+}
+
+.pt-admin-pill-term {
+  font-size: 11px;
+  color: var(--pt-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.pt-admin-pill.active .pt-admin-pill-term {
+  color: oklch(80% 0 0);
+}
+
+/* ── Admin badge in footer ── */
+.pt-admin-badge {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--pt-text-muted);
+}
+
+/* ── Administration banner (main content) ── */
+.pt-admin-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  padding: 10px 14px;
+  border-radius: 7px;
+  background: var(--pt-surface);
+  border: 1px solid var(--pt-border);
+}
+
+.pt-admin-banner-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pt-text);
+}
+
+.pt-admin-banner-sep {
+  color: var(--pt-text-faint);
+  font-size: 13px;
+}
+
+.pt-admin-banner-term {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pt-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pt-admin-banner-tag {
+  margin-left: auto;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--pt-text-faint);
+}
+
+/* ── Mobile admin select ── */
+.pt-mobile-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.pt-mobile-admin {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12px;
+  padding: 6px 8px;
+  border: 1px solid var(--pt-border);
+  border-radius: 6px;
+  background: var(--pt-surface);
+  color: var(--pt-text);
+  cursor: pointer;
+  outline: none;
+}
+
 /* ── Sidebar nav ── */
 .pt-nav {
   flex: 1;

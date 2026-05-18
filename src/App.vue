@@ -1,11 +1,34 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import PromiseCard  from './components/PromiseCard.vue'
 import HistoryChart from './components/HistoryChart.vue'
 import BudgetView      from './components/BudgetView.vue'
 import IndicatorsView  from './components/IndicatorsView.vue'
 
-const LAST_REVIEWED = 'April 2026'
+const ADMINISTRATIONS = [
+  {
+    key:     'tinubu',
+    name:    'Tinubu',
+    title:   'Bola Tinubu',
+    term:    '2023–2027',
+    tagline: 'Renewed Hope Agenda',
+    reviewed: 'April 2026',
+    prefix:  '',        // uses the default filenames
+  },
+  {
+    key:     'buhari',
+    name:    'Buhari',
+    title:   'Muhammadu Buhari',
+    term:    '2015–2023',
+    tagline: 'Change / Next Level',
+    reviewed: 'May 2023',
+    prefix:  'buhari-', // buhari-promises.json etc.
+  },
+]
+
+const activeAdmin = ref('tinubu')
+const currentAdmin = computed(() => ADMINISTRATIONS.find(a => a.key === activeAdmin.value))
+const LAST_REVIEWED = computed(() => currentAdmin.value.reviewed)
 
 const STATUSES = [
   { key: 'all',     label: 'All' },
@@ -33,19 +56,13 @@ const searchQuery    = ref('')
 const expandedId     = ref(null)
 const copied         = ref(false)
 
-onMounted(async () => {
+async function loadData(admin) {
+  const px = ADMINISTRATIONS.find(a => a.key === admin).prefix
+  const get = (name) => fetch(`/${px}${name}.json`).then(r => r.json()).catch(() => [])
   const [p, i, h, f, o, m, bu, bi, ind, ap, j] = await Promise.all([
-    fetch('/promises.json').then(r => r.json()),
-    fetch('/inherited.json').then(r => r.json()),
-    fetch('/history.json').then(r => r.json()),
-    fetch('/fraud.json').then(r => r.json()),
-    fetch('/orders.json').then(r => r.json()),
-    fetch('/ministers.json').then(r => r.json()),
-    fetch('/budget.json').then(r => r.json()),
-    fetch('/bills.json').then(r => r.json()),
-    fetch('/indicators.json').then(r => r.json()),
-    fetch('/appointments.json').then(r => r.json()),
-    fetch('/judgments.json').then(r => r.json()),
+    get('promises'), get('inherited'), get('history'), get('fraud'),
+    get('orders'), get('ministers'), get('budget'), get('bills'),
+    get('indicators'), get('appointments'), get('judgments'),
   ])
   promises.value     = p
   inherited.value    = i
@@ -58,11 +75,24 @@ onMounted(async () => {
   indicators.value   = ind
   appointments.value = ap
   judgments.value    = j
+}
+
+onMounted(async () => {
+  await loadData(activeAdmin.value)
 
   // Deep-link: open card specified by ?id= on load
   const params = new URLSearchParams(window.location.search)
   const id = parseInt(params.get('id'))
   if (id) expandedId.value = id
+})
+
+watch(activeAdmin, (admin) => {
+  activeTab.value      = 'promises'
+  activeStatus.value   = 'all'
+  activeCategory.value = 'all'
+  searchQuery.value    = ''
+  expandedId.value     = null
+  loadData(admin)
 })
 
 // ── Tab switching ─────────────────────────────────────
@@ -334,9 +364,25 @@ const filteredBills = computed(() => {
     <!-- ── Sidebar ── -->
     <aside class="pt-sidebar">
       <div class="pt-sidebar-brand">
-        <div class="pt-eyebrow">Civic Accountability · Nigeria 2023–2027</div>
+        <div class="pt-eyebrow">Civic Accountability · Nigeria</div>
         <h1 class="pt-headline">NGScorecard</h1>
-        <p class="pt-subline">Renewed Hope Agenda</p>
+        <p class="pt-subline">{{ currentAdmin.tagline }}</p>
+      </div>
+
+      <!-- Administration switcher -->
+      <div class="pt-admin-switcher">
+        <div class="pt-admin-label">Administration</div>
+        <div class="pt-admin-pills">
+          <button
+            v-for="a in ADMINISTRATIONS"
+            :key="a.key"
+            :class="['pt-admin-pill', { active: activeAdmin === a.key }]"
+            @click="activeAdmin = a.key"
+          >
+            <span class="pt-admin-pill-name">{{ a.name }}</span>
+            <span class="pt-admin-pill-term">{{ a.term }}</span>
+          </button>
+        </div>
       </div>
 
       <nav class="pt-nav">
@@ -370,16 +416,21 @@ const filteredBills = computed(() => {
       <div class="pt-sidebar-footer">
         <span class="pt-freshness-dot"></span>
         Updated <strong>{{ LAST_REVIEWED }}</strong> · Sources on each card
+        <span class="pt-admin-badge">{{ currentAdmin.title }} · {{ currentAdmin.term }}</span>
       </div>
     </aside>
 
     <!-- ── Mobile header ── -->
     <header class="pt-mobile-header">
       <div class="pt-mobile-brand">
-        <div class="pt-eyebrow">Nigeria 2023–2027</div>
+        <div class="pt-eyebrow">{{ currentAdmin.title }} · {{ currentAdmin.term }}</div>
         <strong class="pt-mobile-title">NGScorecard</strong>
       </div>
-      <select class="pt-mobile-nav" :value="activeTab" @change="switchTab($event.target.value)">
+      <div class="pt-mobile-controls">
+        <select class="pt-mobile-admin" :value="activeAdmin" @change="activeAdmin = $event.target.value">
+          <option v-for="a in ADMINISTRATIONS" :key="a.key" :value="a.key">{{ a.name }} {{ a.term }}</option>
+        </select>
+        <select class="pt-mobile-nav" :value="activeTab" @change="switchTab($event.target.value)">
         <optgroup label="Government">
           <option value="promises">Promises</option>
           <option value="ministers">Ministers</option>
@@ -399,6 +450,7 @@ const filteredBills = computed(() => {
           <option value="bills">Bills Watch</option>
         </optgroup>
       </select>
+      </div>
     </header>
 
     <!-- ── Main content ── -->
@@ -408,6 +460,14 @@ const filteredBills = computed(() => {
     <Transition name="toast">
       <div v-if="copied" class="pt-toast">Link copied to clipboard</div>
     </Transition>
+
+    <!-- Administration banner -->
+    <div class="pt-admin-banner">
+      <span class="pt-admin-banner-name">{{ currentAdmin.title }}</span>
+      <span class="pt-admin-banner-sep">·</span>
+      <span class="pt-admin-banner-term">{{ currentAdmin.term }}</span>
+      <span class="pt-admin-banner-tag">{{ currentAdmin.tagline }}</span>
+    </div>
 
     <!-- ── PROMISES TAB ── -->
     <template v-if="activeTab === 'promises'">
