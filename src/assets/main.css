@@ -412,6 +412,20 @@ body { background: var(--pt-bg); }
 .pt-badge-settled     { background: var(--pt-partial-bg);   color: var(--pt-partial); }
 /* appointments */
 .pt-badge-serving     { background: var(--pt-kept-bg);      color: var(--pt-kept); }
+/* fraud — govt response verdict (second badge, slightly smaller) */
+.pt-badge-response {
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1.5px solid transparent;
+}
+.pt-badge-rv-pursuing  { background: oklch(94% 0.05 145);  color: oklch(34% 0.13 145); border-color: oklch(84% 0.09 145); }
+.pt-badge-rv-stalled   { background: oklch(95% 0.05 68);   color: oklch(44% 0.16 68);  border-color: oklch(85% 0.09 68); }
+.pt-badge-rv-political { background: oklch(95% 0.055 22);  color: oklch(35% 0.22 22);  border-color: oklch(85% 0.09 22); }
+.pt-badge-rv-abandoned { background: oklch(20% 0.01 80);   color: oklch(95% 0 0);      border-color: oklch(20% 0.01 80); }
+.pt-badge-rv-complied  { background: transparent;          color: var(--pt-text-faint); border-color: var(--pt-border); }
 
 /* ── Chevron ── */
 .pt-chevron {
@@ -462,6 +476,12 @@ body { background: var(--pt-bg); }
   font-size: 13px;
   color: var(--pt-text-muted);
   line-height: 1.7;
+}
+
+.pt-detail-response {
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid var(--pt-border-light);
 }
 
 .pt-detail-footer {
@@ -581,6 +601,20 @@ body { background: var(--pt-bg); }
 .pt-chart-legend { margin-top: 4px; }
 
 /* ── Fraud intro ── */
+.pt-controls-response {
+  margin-top: -4px;
+  margin-bottom: 1.25rem;
+  align-items: center;
+}
+
+.pt-response-filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pt-text-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .pt-fraud-intro {
   max-width: 960px;
   margin: 0 auto 1.5rem;
