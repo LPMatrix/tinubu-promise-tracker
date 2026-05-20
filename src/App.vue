@@ -7,22 +7,20 @@ import IndicatorsView  from './components/IndicatorsView.vue'
 
 const ADMINISTRATIONS = [
   {
-    key:     'tinubu',
-    name:    'Tinubu',
-    title:   'Bola Tinubu',
-    term:    '2023–2027',
-    tagline: 'Renewed Hope Agenda',
+    key:      'tinubu',
+    name:     'Tinubu',
+    title:    'Bola Tinubu',
+    term:     '2023–2027',
+    tagline:  'Renewed Hope Agenda',
     reviewed: 'April 2026',
-    prefix:  '',        // uses the default filenames
   },
   {
-    key:     'buhari',
-    name:    'Buhari',
-    title:   'Muhammadu Buhari',
-    term:    '2015–2023',
-    tagline: 'Change / Next Level',
+    key:      'buhari',
+    name:     'Buhari',
+    title:    'Muhammadu Buhari',
+    term:     '2015–2023',
+    tagline:  'Change / Next Level',
     reviewed: 'May 2023',
-    prefix:  'buhari-', // buhari-promises.json etc.
   },
 ]
 
@@ -57,8 +55,7 @@ const expandedId     = ref(null)
 const copied         = ref(false)
 
 async function loadData(admin) {
-  const px = ADMINISTRATIONS.find(a => a.key === admin).prefix
-  const get = (name) => fetch(`/${px}${name}.json`).then(r => r.json()).catch(() => [])
+  const get = (name) => fetch(`/api/${admin}/${name}`).then(r => r.json()).catch(() => [])
   const [p, i, h, f, o, m, bu, bi, ind, ap, j] = await Promise.all([
     get('promises'), get('inherited'), get('history'), get('fraud'),
     get('orders'), get('ministers'), get('budget'), get('bills'),
