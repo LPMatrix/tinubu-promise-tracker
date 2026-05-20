@@ -1,0 +1,174 @@
+import { sqliteTable, integer, text, real } from 'drizzle-orm/sqlite-core'
+
+export const promises = sqliteTable('promises', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  title:          text('title').notNull(),
+  category:       text('category').notNull(),
+  status:         text('status').notNull(),
+  promise:        text('promise').notNull(),
+  assessment:     text('assessment').notNull(),
+  source:         text('source').notNull(),
+  sourceLabel:    text('source_label').notNull(),
+  updated:        text('updated').notNull(),
+})
+
+export const inherited = sqliteTable('inherited', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  title:          text('title').notNull(),
+  category:       text('category').notNull(),
+  status:         text('status').notNull(),
+  problem:        text('problem').notNull(),
+  resolution:     text('resolution').notNull(),
+  source:         text('source').notNull(),
+  sourceLabel:    text('source_label').notNull(),
+  updated:        text('updated').notNull(),
+})
+
+export const fraud = sqliteTable('fraud', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  title:          text('title').notNull(),
+  category:       text('category').notNull(),
+  status:         text('status').notNull(),
+  amount:         text('amount'),
+  year:           integer('year'),
+  allegation:     text('allegation').notNull(),
+  outcome:        text('outcome').notNull(),
+  source:         text('source').notNull(),
+  sourceLabel:    text('source_label').notNull(),
+  updated:        text('updated').notNull(),
+})
+
+export const orders = sqliteTable('orders', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  title:          text('title').notNull(),
+  category:       text('category').notNull(),
+  status:         text('status').notNull(),
+  signed:         text('signed'),
+  directive:      text('directive').notNull(),
+  effect:         text('effect').notNull(),
+  source:         text('source').notNull(),
+  sourceLabel:    text('source_label').notNull(),
+  updated:        text('updated').notNull(),
+})
+
+export const ministers = sqliteTable('ministers', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  name:           text('name').notNull(),
+  ministry:       text('ministry').notNull(),
+  appointed:      text('appointed'),
+  status:         text('status').notNull(),
+  serving:        integer('serving', { mode: 'boolean' }),
+  mandate:        text('mandate').notNull(),
+  performance:    text('performance').notNull(),
+  source:         text('source'),
+  sourceLabel:    text('source_label'),
+  updated:        text('updated'),
+})
+
+export const bills = sqliteTable('bills', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  title:          text('title').notNull(),
+  category:       text('category').notNull(),
+  status:         text('status').notNull(),
+  chamber:        text('chamber'),
+  introduced:     text('introduced'),
+  signed:         text('signed'),
+  summary:        text('summary').notNull(),
+  outcome:        text('outcome').notNull(),
+  source:         text('source').notNull(),
+  sourceLabel:    text('source_label').notNull(),
+  updated:        text('updated').notNull(),
+})
+
+export const appointments = sqliteTable('appointments', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  name:           text('name').notNull(),
+  role:           text('role').notNull(),
+  agency:         text('agency').notNull(),
+  category:       text('category').notNull(),
+  state:          text('state').notNull(),
+  geopolitical:   text('geopolitical').notNull(),
+  appointed:      text('appointed').notNull(),
+  status:         text('status').notNull(),
+  note:           text('note').notNull(),
+})
+
+export const judgments = sqliteTable('judgments', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  title:          text('title').notNull(),
+  court:          text('court').notNull(),
+  category:       text('category').notNull(),
+  status:         text('status').notNull(),
+  compliance:     text('compliance'),
+  ruled:          text('ruled').notNull(),
+  issue:          text('issue').notNull(),
+  outcome:        text('outcome').notNull(),
+  source:         text('source'),
+  sourceLabel:    text('source_label'),
+})
+
+export const history = sqliteTable('history', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  label:          text('label').notNull(),
+  kept:           integer('kept').notNull(),
+  partial:        integer('partial').notNull(),
+  broken:         integer('broken').notNull(),
+  pending:        integer('pending').notNull(),
+})
+
+export const budget = sqliteTable('budget', {
+  id:                integer('id').primaryKey({ autoIncrement: true }),
+  administration:    text('administration').notNull(),
+  year:              integer('year').notNull(),
+  totalBn:           real('total_bn').notNull(),
+  revenueBn:         real('revenue_bn').notNull(),
+  actualRevenueBn:   real('actual_revenue_bn'),
+  debtServiceBn:     real('debt_service_bn').notNull(),
+  capitalBn:         real('capital_bn').notNull(),
+  recurrentBn:       real('recurrent_bn').notNull(),
+  implementationPct: real('implementation_pct'),
+  deficitBn:         real('deficit_bn').notNull(),
+  note:              text('note'),
+  source:            text('source').notNull(),
+  sourceLabel:       text('source_label').notNull(),
+})
+
+export const budgetMinistries = sqliteTable('budget_ministries', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  budgetYear:     integer('budget_year').notNull(),
+  administration: text('administration').notNull(),
+  name:           text('name').notNull(),
+  allocationBn:   real('allocation_bn').notNull(),
+  releasedPct:    real('released_pct'),
+  note:           text('note'),
+})
+
+export const indicators = sqliteTable('indicators', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  administration: text('administration').notNull(),
+  key:            text('key').notNull(),
+  label:          text('label').notNull(),
+  unit:           text('unit').notNull(),
+  color:          text('color').notNull(),
+  description:    text('description').notNull(),
+  source:         text('source').notNull(),
+  sourceLabel:    text('source_label').notNull(),
+  note:           text('note'),
+})
+
+export const indicatorPoints = sqliteTable('indicator_points', {
+  id:             integer('id').primaryKey({ autoIncrement: true }),
+  indicatorId:    integer('indicator_id').notNull(),
+  administration: text('administration').notNull(),
+  label:          text('label').notNull(),
+  value:          real('value').notNull(),
+})
