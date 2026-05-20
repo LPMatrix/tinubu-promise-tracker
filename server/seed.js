@@ -5,7 +5,7 @@ import { db } from './db.js'
 import * as t from './schema.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const pub = path.join(__dirname, '../public')
+const pub = path.join(__dirname, '../data/seed')
 
 function readJson(filename) {
   try {
