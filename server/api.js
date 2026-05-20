@@ -28,56 +28,58 @@ export function createApiRouter() {
     return true
   }
 
-  router.get('/:admin/promises', (req, res) => {
+  router.get('/:admin/promises', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.promises).where(eq(t.promises.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.promises).where(eq(t.promises.administration, req.params.admin)))
   })
 
-  router.get('/:admin/inherited', (req, res) => {
+  router.get('/:admin/inherited', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.inherited).where(eq(t.inherited.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.inherited).where(eq(t.inherited.administration, req.params.admin)))
   })
 
-  router.get('/:admin/fraud', (req, res) => {
+  router.get('/:admin/fraud', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.fraud).where(eq(t.fraud.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.fraud).where(eq(t.fraud.administration, req.params.admin)))
   })
 
-  router.get('/:admin/orders', (req, res) => {
+  router.get('/:admin/orders', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.orders).where(eq(t.orders.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.orders).where(eq(t.orders.administration, req.params.admin)))
   })
 
-  router.get('/:admin/ministers', (req, res) => {
+  router.get('/:admin/ministers', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.ministers).where(eq(t.ministers.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.ministers).where(eq(t.ministers.administration, req.params.admin)))
   })
 
-  router.get('/:admin/bills', (req, res) => {
+  router.get('/:admin/bills', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.bills).where(eq(t.bills.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.bills).where(eq(t.bills.administration, req.params.admin)))
   })
 
-  router.get('/:admin/appointments', (req, res) => {
+  router.get('/:admin/appointments', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.appointments).where(eq(t.appointments.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.appointments).where(eq(t.appointments.administration, req.params.admin)))
   })
 
-  router.get('/:admin/judgments', (req, res) => {
+  router.get('/:admin/judgments', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.judgments).where(eq(t.judgments.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.judgments).where(eq(t.judgments.administration, req.params.admin)))
   })
 
-  router.get('/:admin/history', (req, res) => {
+  router.get('/:admin/history', async (req, res) => {
     if (!guard(req, res)) return
-    res.json(db.select().from(t.history).where(eq(t.history.administration, req.params.admin)).all())
+    res.json(await db.select().from(t.history).where(eq(t.history.administration, req.params.admin)))
   })
 
-  router.get('/:admin/budget', (req, res) => {
+  router.get('/:admin/budget', async (req, res) => {
     if (!guard(req, res)) return
     const { admin } = req.params
-    const budgets    = db.select().from(t.budget).where(eq(t.budget.administration, admin)).all()
-    const ministries = db.select().from(t.budgetMinistries).where(eq(t.budgetMinistries.administration, admin)).all()
+    const [budgets, ministries] = await Promise.all([
+      db.select().from(t.budget).where(eq(t.budget.administration, admin)),
+      db.select().from(t.budgetMinistries).where(eq(t.budgetMinistries.administration, admin)),
+    ])
     const byYear = {}
     for (const m of ministries) {
       if (!byYear[m.budgetYear]) byYear[m.budgetYear] = []
@@ -86,11 +88,13 @@ export function createApiRouter() {
     res.json(budgets.map(b => ({ ...b, ministries: byYear[b.year] || [] })))
   })
 
-  router.get('/:admin/indicators', (req, res) => {
+  router.get('/:admin/indicators', async (req, res) => {
     if (!guard(req, res)) return
     const { admin } = req.params
-    const inds = db.select().from(t.indicators).where(eq(t.indicators.administration, admin)).all()
-    const pts  = db.select().from(t.indicatorPoints).where(eq(t.indicatorPoints.administration, admin)).all()
+    const [inds, pts] = await Promise.all([
+      db.select().from(t.indicators).where(eq(t.indicators.administration, admin)),
+      db.select().from(t.indicatorPoints).where(eq(t.indicatorPoints.administration, admin)),
+    ])
     const byId = {}
     for (const p of pts) {
       if (!byId[p.indicatorId]) byId[p.indicatorId] = []
