@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm'
 import { db } from './db.js'
 import * as t from './schema.js'
 
-const VALID_ADMINS = new Set(['tinubu', 'buhari'])
+const VALID_ADMINS = new Set(['tinubu', 'buhari', 'jonathan', 'yaradua', 'obasanjo'])
 
 export function createApiRouter() {
   const router = Router()
