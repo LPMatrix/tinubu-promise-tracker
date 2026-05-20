@@ -1,0 +1,16 @@
+{
+  "name": "NGScorecard",
+  "short_name": "NGScorecard",
+  "description": "Nigeria Government Accountability Tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

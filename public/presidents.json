@@ -1,0 +1,52 @@
+[
+  {
+    "key": "tinubu",
+    "name": "Tinubu",
+    "fullName": "Bola Tinubu",
+    "termStart": "2023",
+    "termEnd": null,
+    "tagline": "Renewed Hope Agenda",
+    "party": "APC",
+    "reviewed": "April 2026"
+  },
+  {
+    "key": "buhari",
+    "name": "Buhari",
+    "fullName": "Muhammadu Buhari",
+    "termStart": "2015",
+    "termEnd": "2023",
+    "tagline": "Change / Next Level",
+    "party": "APC",
+    "reviewed": "May 2023"
+  },
+  {
+    "key": "jonathan",
+    "name": "Jonathan",
+    "fullName": "Goodluck Ebele Jonathan",
+    "termStart": "2010",
+    "termEnd": "2015",
+    "tagline": "Transformation Agenda",
+    "party": "PDP",
+    "reviewed": "May 2015"
+  },
+  {
+    "key": "yaradua",
+    "name": "Yar'Adua",
+    "fullName": "Umaru Musa Yar'Adua",
+    "termStart": "2007",
+    "termEnd": "2010",
+    "tagline": "Seven-Point Agenda",
+    "party": "PDP",
+    "reviewed": "May 2010"
+  },
+  {
+    "key": "obasanjo",
+    "name": "Obasanjo",
+    "fullName": "Olusegun Obasanjo",
+    "termStart": "1999",
+    "termEnd": "2007",
+    "tagline": "NEEDS / Economic Reform",
+    "party": "PDP",
+    "reviewed": "May 2007"
+  }
+]

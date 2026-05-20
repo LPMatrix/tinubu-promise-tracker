@@ -28,14 +28,6 @@ export function createApiRouter() {
     return true
   }
 
-  router.get('/presidents', async (_req, res) => {
-    const rows = await db.select().from(t.presidents)
-    res.json(rows.map(p => ({
-      ...p,
-      term: p.termEnd ? `${p.termStart}–${p.termEnd}` : `${p.termStart}–present`,
-    })))
-  })
-
   router.get('/:admin/promises', async (req, res) => {
     if (!guard(req, res)) return
     res.json(await db.select().from(t.promises).where(eq(t.promises.administration, req.params.admin)))

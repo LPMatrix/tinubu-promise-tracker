@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "title": "Fight corruption and recover stolen funds",
+    "category": "Governance",
+    "status": "partial",
+    "promise": "Promised an all-out war on corruption, recovery of looted funds, and prosecution of those who stole public money.",
+    "assessment": "High-profile EFCC prosecutions and asset recovery — including the Abacha loot repatriation deals — were notable. However, critics noted selective prosecution and continued immunity for political allies. OECD estimates roughly $1 billion was recovered during the term.",
+    "source": "https://www.transparency.org/en/countries/nigeria",
+    "sourceLabel": "Transparency International — Nigeria",
+    "updated": "May 2023"
+  },
+  {
+    "id": 2,
+    "title": "Revive the economy and diversify away from oil",
+    "category": "Economy",
+    "status": "partial",
+    "promise": "Promised to diversify Nigeria's oil-dependent economy, grow agriculture, and achieve economic self-sufficiency.",
+    "assessment": "Nigeria experienced two recessions under Buhari (2016 and 2020). Agriculture sector grew, partly via the Anchor Borrowers' Programme. Oil still accounted for over 80% of foreign exchange earnings at end of term. GDP per capita fell in dollar terms.",
+    "source": "https://nbs.gov.ng/",
+    "sourceLabel": "National Bureau of Statistics",
+    "updated": "May 2023"
+  },
+  {
+    "id": 3,
+    "title": "Defeat Boko Haram and restore security in the North-East",
+    "category": "Security",
+    "status": "partial",
+    "promise": "Declared Boko Haram technically defeated in 2015 shortly after taking office. Promised to rescue all Chibok girls and restore normalcy to the North-East.",
+    "assessment": "Boko Haram lost significant territory and fractured into splinter groups. 107 of the 276 Chibok girls were rescued or freed. However, insurgency continued in a degraded form, and banditry expanded to the North-West. Full normalcy was not achieved.",
+    "source": "https://www.amnesty.org/en/location/africa/west-and-central-africa/nigeria/",
+    "sourceLabel": "Amnesty International — Nigeria",
+    "updated": "May 2023"
+  },
+  {
+    "id": 4,
+    "title": "Fix infrastructure — roads, rail, and power",
+    "category": "Infrastructure",
+    "status": "partial",
+    "promise": "Promised to invest in rail rehabilitation, fix major highways, and dramatically increase electricity supply.",
+    "assessment": "Major rail projects completed: Lagos-Ibadan rail, Abuja-Kaduna line extended, Itakpe-Warri line. Road rehabilitation was uneven. Power generation capacity increased modestly but outages remained chronic; average grid output stayed below 5,000MW against a demand of 30,000MW+.",
+    "source": "https://businessday.ng/energy/article/nigeria-power-sector-performance/",
+    "sourceLabel": "BusinessDay — power sector performance",
+    "updated": "May 2023"
+  },
+  {
+    "id": 5,
+    "title": "Create jobs and reduce unemployment",
+    "category": "Economy",
+    "status": "broken",
+    "promise": "Pledged mass job creation through industrialisation, agriculture, and small business support.",
+    "assessment": "Official unemployment rose from roughly 10% in 2015 to 33% by Q4 2020 (NBS methodology). Youth unemployment exceeded 42%. The N-Power programme enrolled about 500,000 graduates in temporary public work, falling far short of demand.",
+    "source": "https://nbs.gov.ng/",
+    "sourceLabel": "National Bureau of Statistics",
+    "updated": "May 2023"
+  }
+]

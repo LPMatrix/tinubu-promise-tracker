@@ -31,20 +31,9 @@ async function clearAll() {
   await db.delete(t.fraud)
   await db.delete(t.inherited)
   await db.delete(t.promises)
-  await db.delete(t.presidents)
 }
 
 // ── Seed helpers ─────────────────────────────────────────────────────────────
-
-async function seedPresidents(rows) {
-  for (const r of rows) {
-    await db.insert(t.presidents).values({
-      key: r.key, name: r.name, fullName: r.fullName,
-      termStart: r.termStart, termEnd: r.termEnd ?? null,
-      tagline: r.tagline, party: r.party ?? null, reviewed: r.reviewed,
-    })
-  }
-}
 
 async function seedPromises(rows, admin) {
   for (const r of rows) {
@@ -184,8 +173,6 @@ const ADMINISTRATIONS = [
 ]
 
 await clearAll()
-
-await seedPresidents(readJson('presidents.json'))
 
 for (const { key, prefix } of ADMINISTRATIONS) {
   console.log(`Seeding ${key}…`)

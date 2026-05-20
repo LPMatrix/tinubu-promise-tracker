@@ -5,10 +5,27 @@ import HistoryChart from './components/HistoryChart.vue'
 import BudgetView      from './components/BudgetView.vue'
 import IndicatorsView  from './components/IndicatorsView.vue'
 
-const ADMINISTRATIONS = ref([])
+const ADMINISTRATIONS = [
+  {
+    key:      'tinubu',
+    name:     'Tinubu',
+    title:    'Bola Tinubu',
+    term:     '2023–2027',
+    tagline:  'Renewed Hope Agenda',
+    reviewed: 'April 2026',
+  },
+  {
+    key:      'buhari',
+    name:     'Buhari',
+    title:    'Muhammadu Buhari',
+    term:     '2015–2023',
+    tagline:  'Change / Next Level',
+    reviewed: 'May 2023',
+  },
+]
 
 const activeAdmin = ref('tinubu')
-const currentAdmin = computed(() => ADMINISTRATIONS.value.find(a => a.key === activeAdmin.value) ?? {})
+const currentAdmin = computed(() => ADMINISTRATIONS.find(a => a.key === activeAdmin.value))
 const LAST_REVIEWED = computed(() => currentAdmin.value.reviewed)
 
 const STATUSES = [
@@ -58,16 +75,6 @@ async function loadData(admin) {
 }
 
 onMounted(async () => {
-  const presidents = await fetch('/api/presidents').then(r => r.json()).catch(() => [])
-  ADMINISTRATIONS.value = presidents.map(p => ({
-    key:      p.key,
-    name:     p.name,
-    title:    p.fullName,
-    term:     p.term,
-    tagline:  p.tagline,
-    reviewed: p.reviewed,
-  }))
-
   await loadData(activeAdmin.value)
 
   // Deep-link: open card specified by ?id= on load
@@ -91,7 +98,6 @@ function switchTab(tab) {
   activeTab.value      = tab
   activeStatus.value   = 'all'
   activeCategory.value = 'all'
-  activeResponse.value = 'all'
   searchQuery.value    = ''
   setExpanded(null)
 }
@@ -170,17 +176,6 @@ const FRAUD_STATUSES = [
   { key: 'acquitted', label: 'Acquitted' },
 ]
 
-const FRAUD_RESPONSES = [
-  { key: 'all',       label: 'All responses' },
-  { key: 'pursuing',  label: 'Pursuing' },
-  { key: 'stalled',   label: 'Stalled' },
-  { key: 'political', label: 'Politicised' },
-  { key: 'abandoned', label: 'Abandoned' },
-  { key: 'complied',  label: 'No interference' },
-]
-
-const activeResponse = ref('all')
-
 const fraudCategories = computed(() =>
   [...new Set(fraud.value.map(f => f.category))].sort()
 )
@@ -194,14 +189,13 @@ const fraudCounts = computed(() => {
 const filteredFraud = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return fraud.value.filter(f => {
-    const matchStatus   = activeStatus.value === 'all' || f.status === activeStatus.value
-    const matchResponse = activeResponse.value === 'all' || f.responseVerdict === activeResponse.value
-    const matchCat      = activeCategory.value === 'all' || f.category === activeCategory.value
-    const matchQ        = !q
+    const matchStatus = activeStatus.value === 'all' || f.status === activeStatus.value
+    const matchCat    = activeCategory.value === 'all' || f.category === activeCategory.value
+    const matchQ      = !q
       || f.title.toLowerCase().includes(q)
       || f.category.toLowerCase().includes(q)
       || f.allegation.toLowerCase().includes(q)
-    return matchStatus && matchResponse && matchCat && matchQ
+    return matchStatus && matchCat && matchQ
   })
 })
 
@@ -647,17 +641,6 @@ const filteredBills = computed(() => {
           <option v-for="cat in fraudCategories" :key="cat" :value="cat">{{ cat }}</option>
         </select>
       </div>
-      <div class="pt-controls pt-controls-response">
-        <span class="pt-response-filter-label">Govt response:</span>
-        <div class="pt-filter-group">
-          <button
-            v-for="r in FRAUD_RESPONSES"
-            :key="r.key"
-            :class="['pt-filter-btn', `pt-rfbtn-${r.key}`, { active: activeResponse === r.key }]"
-            @click="activeResponse = r.key"
-          >{{ r.label }}</button>
-        </div>
-      </div>
 
       <div class="pt-list">
         <PromiseCard
@@ -666,10 +649,8 @@ const filteredBills = computed(() => {
           :item="f"
           :field1="f.allegation"
           :field2="f.outcome"
-          :field3="f.govtResponse"
           label1="Allegation"
           label2="Outcome / Status"
-          label3="Administration's response"
           :isExpanded="expandedId === f.id"
           @toggle="handleToggle"
           @share="handleShare"

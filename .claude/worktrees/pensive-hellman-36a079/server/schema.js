@@ -1,17 +1,5 @@
 import { sqliteTable, integer, text, real } from 'drizzle-orm/sqlite-core'
 
-export const presidents = sqliteTable('presidents', {
-  id:        integer('id').primaryKey({ autoIncrement: true }),
-  key:       text('key').notNull().unique(),
-  name:      text('name').notNull(),
-  fullName:  text('full_name').notNull(),
-  termStart: text('term_start').notNull(),
-  termEnd:   text('term_end'),
-  tagline:   text('tagline').notNull(),
-  party:     text('party'),
-  reviewed:  text('reviewed').notNull(),
-})
-
 export const promises = sqliteTable('promises', {
   id:             integer('id').primaryKey({ autoIncrement: true }),
   administration: text('administration').notNull(),
